@@ -13,6 +13,7 @@ function MaleTrainer(name, type){
 	this.element.style.position = "absolute";
     this.element.style.width = this.tileSize.width;
 	this.element.style.height = this.tileSize.height;
+	this.element.className = "trainer male";
 	document.body.appendChild(this.element);
 
 	this.tile = {
@@ -56,13 +57,27 @@ function MaleTrainer(name, type){
 		}
 	}
 
-	this.face = function(direction)
-	{
+	this.face = function(direction) {
 		thisCharacter.facing = direction;
 		thisCharacter.element.style.background = thisCharacter.tile[direction].standing;
 	};
 	this.face("south");
 
+	this.stride = "standing";
+	this.foot = "right";
+	this.step = function() {
+		if ( thisCharacter.stride == "standing" ) {
+			thisCharacter.stride = thisCharacter.foot + "Foot";
+			thisCharacter.foot = ( thisCharacter.foot == "right" ) ? "left" : "right";
+		}
+		else
+			thisCharacter.stride = "standing";
+		thisCharacter.element.style.background = thisCharacter.tile[thisCharacter.facing][thisCharacter.stride];
+	};
+	this.stop = function() {
+		thisCharacter.stride = "standing";
+		thisCharacter.element.style.background = thisCharacter.tile[thisCharacter.facing].standing;
+	};
 	this.moveTo = function(x, y) {
 		var currentX = Number(thisCharacter.element.style.left.replace("px","")) || 0;
 		var currentY = Number(thisCharacter.element.style.top.replace("px","")) || 0;
@@ -84,6 +99,7 @@ function MaleTrainer(name, type){
 		
 		thisCharacter.element.style.left = x + "px";
 		thisCharacter.element.style.top = y + "px";
+		thisCharacter.step();
 	};
 	this.moveNorth = function() {
 		thisCharacter.face("north");
@@ -104,6 +120,8 @@ function MaleTrainer(name, type){
 
 	if (this.type == "character") {
 
+		this.element.className += " villager";
+
 		this.talk = new Event("talk");
 		this.onTalk = function() {
 			alert("You look an awful lot like me.");
@@ -113,7 +131,6 @@ function MaleTrainer(name, type){
 		this.p = 0;
 		this.pace = 3;
 		this.pacing = function() {
-			console.log("Pacing event", thisCharacter.p);
 			switch (thisCharacter.p) {
 			    case 0:
 			    case 1:
@@ -130,6 +147,7 @@ function MaleTrainer(name, type){
 			    	thisCharacter.moveWest();
 			    	break;
 			}
+			setTimeout(thisCharacter.stop, 100);
 
 			if ( thisCharacter.p < 7 )
 				thisCharacter.p++;
@@ -146,6 +164,11 @@ function MaleTrainer(name, type){
 		document.addEventListener("pushDown", this.moveSouth);
 		document.addEventListener("pushRight", this.moveEast);
 		document.addEventListener("pushLeft", this.moveWest);
+
+		document.addEventListener("releaseUp", this.stop);
+		document.addEventListener("releaseDown", this.stop);
+		document.addEventListener("releaseRight", this.stop);
+		document.addEventListener("releaseLeft", this.stop);
 
 	}
 
