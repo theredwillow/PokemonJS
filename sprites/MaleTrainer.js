@@ -6,6 +6,11 @@ function MaleTrainer(name, type){
 	this.name = name || "Red";
 	this.gender = "male";
 
+	if ( this.type == "god" ) {
+		this.type = "player";
+		this.god = true;
+	}
+
 	this.image = "sprites/maleTrainer.png";
 	this.tileSize = { width: 28, height: 32 };
 
@@ -13,7 +18,9 @@ function MaleTrainer(name, type){
 	this.element.style.position = "absolute";
     this.element.style.width = this.tileSize.width;
 	this.element.style.height = this.tileSize.height;
-	this.element.className = "trainer male";
+	this.element.className = "trainer male no-walk";
+	this.element.style.top = "0px";
+	this.element.style.left = "0px";
 	document.body.appendChild(this.element);
 
 	this.tile = {
@@ -50,9 +57,9 @@ function MaleTrainer(name, type){
 		for (var j = 0; j < 3; j++) {
 			var stnc = stances[j];
 			var newVal = "url('" + this.image + "') ";
-			newVal += (this.tile[dir][stnc].x * -1 * this.tileSize.width) + "px";
+			newVal += ( this.tile[dir][stnc].x * -1 * this.tileSize.width ) + "px";
 			newVal += " ";
-			newVal += (this.tile[dir][stnc].y * -1 * this.tileSize.height) + "px";
+			newVal += ( this.tile[dir][stnc].y * -1 * this.tileSize.height ) + "px";
 			this.tile[dir][stnc] = newVal;
 		}
 	}
@@ -74,11 +81,12 @@ function MaleTrainer(name, type){
 			thisCharacter.stride = "standing";
 		thisCharacter.element.style.background = thisCharacter.tile[thisCharacter.facing][thisCharacter.stride];
 	};
-	this.stop = function() {
+	this.stand = function() {
 		thisCharacter.stride = "standing";
 		thisCharacter.element.style.background = thisCharacter.tile[thisCharacter.facing].standing;
 	};
-	this.moveTo = function(x, y) {
+	this.stop = function() { setTimeout(thisCharacter.stand, 100); };
+	this.moveTo = function(x, y, special) {
 		var currentX = Number(thisCharacter.element.style.left.replace("px","")) || 0;
 		var currentY = Number(thisCharacter.element.style.top.replace("px","")) || 0;
 		var currentWidth = Number(thisCharacter.tileSize.width);
@@ -97,9 +105,14 @@ function MaleTrainer(name, type){
 		else if ( y == "+" )
 			y = currentY - currentHeight;
 		
-		thisCharacter.element.style.left = x + "px";
-		thisCharacter.element.style.top = y + "px";
-		thisCharacter.step();
+		if ( !special )
+			thisCharacter.step();
+		if ( !detectCollision(thisCharacter, x, y) || thisCharacter.god ) {
+			thisCharacter.element.style.left = x + "px";
+			thisCharacter.element.style.top = y + "px";
+		}
+		else
+			thisCharacter.stop();
 	};
 	this.moveNorth = function() {
 		thisCharacter.face("north");
@@ -147,7 +160,7 @@ function MaleTrainer(name, type){
 			    	thisCharacter.moveWest();
 			    	break;
 			}
-			setTimeout(thisCharacter.stop, 100);
+			thisCharacter.stop();
 
 			if ( thisCharacter.p < 7 )
 				thisCharacter.p++;

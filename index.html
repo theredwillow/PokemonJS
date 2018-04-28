@@ -2,15 +2,17 @@
 <head>
     <title>PokemonJS</title>
     <script src="scripts/controls.js"></script>
+    <script src="scripts/util.js"></script>
     <script src="sprites/MaleTrainer.js"></script>
 </head>
 <body>
 
     <script>
         var player = new MaleTrainer("Jared", "player");
+        player.moveTo(0, 60, "init");
 
         var test = new MaleTrainer("Test");
-        // test.moveTo();
+        test.moveTo(100, 100, "init");
     </script>
 
 </body>
