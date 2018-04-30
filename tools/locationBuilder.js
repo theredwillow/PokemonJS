@@ -262,11 +262,22 @@ var loadBuilder = function() {
         var animationDisplay = document.createElement("div");
         animationDisplay.style.width = newLocation.tileSize.width;
         animationDisplay.style.height = newLocation.tileSize.height;
+        animateDisplay.style.display = "inline-block";
+        var animationCycle = 0;
+        var animateBackground = function() {
+            if (currentCombo.length) {
+                animationDisplay.style.background = currentCombo[animationCycle++].style.background;
+                if( animationCycle == currentCombo.length )
+                    animationCycle = 0;
+            }
+        };
+        var bkgroundAnimation = setInterval(animateBackground, 250);
         selectionDisplay.appendChild(animationDisplay);
 
         var selectedTiles = document.createElement("div");
         selectedTiles.style.border = "1px solid black";
         selectedTiles.style.padding = "5px";
+        selectedTiles.style.display = "inline-block";
         selectionDisplay.appendChild(selectedTiles);
 
         var formCombo = function(e) {
