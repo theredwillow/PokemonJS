@@ -262,7 +262,7 @@ var loadBuilder = function() {
         var animationDisplay = document.createElement("div");
         animationDisplay.style.width = newLocation.tileSize.width;
         animationDisplay.style.height = newLocation.tileSize.height;
-        animateDisplay.style.display = "inline-block";
+        animationDisplay.style.display = "inline-block";
         var animationCycle = 0;
         var animateBackground = function() {
             if (currentCombo.length) {
