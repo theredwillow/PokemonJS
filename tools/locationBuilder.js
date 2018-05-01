@@ -13,7 +13,7 @@ var loadBuilder = function() {
     var steps = [];
 
     var numOfRows = 1;
-    var numOfColumns = 1;
+    var numOfColumns;
 
     var backButton = document.createElement("button");
     backButton.innerHTML = "<<< Previous Step";
@@ -52,6 +52,19 @@ var loadBuilder = function() {
             };
             img.style.visibility = "visible";
             nextButton.style.visibility = "visible";
+
+            var ifWidthIsLonger = ( newLocation.imageSize.width > newLocation.imageSize.height );
+            var longerSide = ifWidthIsLonger ? newLocation.imageSize.width : newLocation.imageSize.height;
+            var shorterSide = ifWidthIsLonger ? newLocation.imageSize.height : newLocation.imageSize.width;
+            
+            var tileSize = longerSide / numOfRows;
+
+            while ( shorterSide % tileSize ) {
+                numOfRows++;
+                tileSize = longerSide / numOfRows;
+            }
+            newLocation.tileSize = tileSize;
+            numOfColumns = newLocation.imageSize.width / tileSize;            
         };
 
         var img = document.createElement("img");
@@ -70,170 +83,6 @@ var loadBuilder = function() {
     };
 
     steps[1] = function() {
-        stepTitle.innerHTML = "Specify the number of rows...";
-
-        backButton.style.visibility = "visible";
-
-        var displayTable = document.createElement("table");
-        display.appendChild(displayTable);
-
-        var tileRow = document.createElement("tr");
-        displayTable.appendChild(tileRow);
-
-        var tiles = document.createElement("td");
-        tiles.style.position = "relative";
-        tileRow.appendChild(tiles);
-
-        var buildTiles = function() {
-            tiles.innerHTML = "";
-            var rowHeight = newLocation.imageSize.height / numOfRows;
-            for (var r = 0; r < numOfRows; r++) {
-                var clipping = document.createElement("div");
-                clipping.style.position = "absolute";
-                clipping.style.left = "0px";
-                clipping.style.top = ( ((r + 1) * 5) + (r * rowHeight) ) + "px";
-                clipping.style.width = newLocation.imageSize.width;
-                clipping.style.height = rowHeight;
-
-                var background = "url('" + newLocation.image + "') 0px ";
-                background += ( r * rowHeight * -1 ) + "px";
-                clipping.style.background = background;
-
-                tiles.appendChild(clipping);
-
-                displayCount.innerHTML = numOfRows + " Rows";
-                tiles.style.height = ( (numOfRows * 5) + newLocation.imageSize.height ) + "px";
-
-                newLocation.tileSize = { height: rowHeight };
-            }
-        };
-
-        var buttonRow = document.createElement("tr");
-        displayTable.appendChild(buttonRow);
-
-        var buttons = document.createElement("td");
-        buttonRow.appendChild(buttons);
-
-        var lessRows = document.createElement("button");
-        lessRows.innerHTML = "<<< Remove Some Rows";
-        var calLess = function() {
-            numOfRows--;
-            while ( ! newLocation.imageSize.height % numOfRows ) {
-                numOfRows--;
-            }
-            buildTiles();
-            if ( numOfRows == 1 )
-                lessRows.style.visibility = "hidden";
-        };
-        lessRows.addEventListener("click", calLess);
-        lessRows.style.visibility = "hidden";
-        buttons.appendChild(lessRows);
-
-        var displayCount = document.createElement("span");
-        buttons.appendChild(displayCount);
-
-        var moreRows = document.createElement("button");
-        moreRows.innerHTML = "Add More Rows >>>";
-        var calMore = function() {
-            lessRows.style.visibility = "visible";
-            numOfRows++;
-            while ( ! newLocation.imageSize.height % numOfRows ) {
-                numOfRows++;
-            }
-            buildTiles();
-        };
-        moreRows.addEventListener("click", calMore);
-        buttons.appendChild(moreRows);
-
-        buildTiles();
-
-    };
-
-    steps[2] = function() {
-        stepTitle.innerHTML = "Specify the number of columns...";
-
-        var displayTable = document.createElement("table");
-        display.appendChild(displayTable);
-
-        var tileRow = document.createElement("tr");
-        displayTable.appendChild(tileRow);
-
-        var tiles = document.createElement("td");
-        tiles.style.position = "relative";
-        tileRow.appendChild(tiles);
-        tiles.style.height = ( (numOfRows * 5) + newLocation.imageSize.height ) + "px";
-
-        var buildTiles = function() {
-            tiles.innerHTML = "";
-
-            var columnWidth = newLocation.imageSize.width / numOfColumns;
-            for (var r = 0; r < numOfRows; r++) {
-                for (var c = 0; c < numOfColumns; c++) {
-            
-                    var clipping = document.createElement("div");
-                    clipping.style.position = "absolute";
-                    clipping.style.left = ( ((c + 1) * 5) + (c * columnWidth) ) + "px";
-                    clipping.style.top = ( ((r + 1) * 5) + (r * newLocation.tileSize.height) ) + "px";
-                    clipping.style.width = columnWidth;
-                    clipping.style.height = newLocation.tileSize.height;
-            
-                    var background = "url('" + newLocation.image + "') ";
-                    background += ( c * -1 * columnWidth ) + "px ";
-                    background += ( r * -1 * newLocation.tileSize.height ) + "px";
-                    clipping.style.background = background;
-            
-                    tiles.appendChild(clipping);
-            
-                    displayCount.innerHTML = numOfColumns + " Columns";
-            
-                    newLocation.tileSize.width = columnWidth;
-            
-                }
-            }
-        };
-
-        var buttonRow = document.createElement("tr");
-        displayTable.appendChild(buttonRow);
-
-        var buttons = document.createElement("td");
-        buttonRow.appendChild(buttons);
-
-        var lessColumns = document.createElement("button");
-        lessColumns.innerHTML = "<<< Remove Some Columns";
-        var calLess = function() {
-            numOfColumns--;
-            while ( ! newLocation.imageSize.width % numOfColumns ) {
-                numOfColumns--;
-            }
-            buildTiles();
-            if ( numOfColumns == 1 )
-                lessColumns.style.visibility = "hidden";
-        };
-        lessColumns.addEventListener("click", calLess);
-        lessColumns.style.visibility = "hidden";
-        buttons.appendChild(lessColumns);
-
-        var displayCount = document.createElement("span");
-        buttons.appendChild(displayCount);
-
-        var moreColumns = document.createElement("button");
-        moreColumns.innerHTML = "Add More Columns >>>";
-        var calMore = function() {
-            lessColumns.style.visibility = "visible";
-            numOfColumns++;
-            while ( ! newLocation.imageSize.width % numOfColumns ) {
-                numOfColumns++;
-            }
-            buildTiles();
-        };
-        moreColumns.addEventListener("click", calMore);
-        buttons.appendChild(moreColumns);
-
-        buildTiles();
-
-    };
-
-    steps[3] = function() {
         stepTitle.innerHTML = "Combine tiles to animate them...";
 
         var displayTable = document.createElement("table");
@@ -253,6 +102,7 @@ var loadBuilder = function() {
         row.appendChild(animations);
 
         var currentCombo = [];
+        var savedCombos = [];
 
         var selectionDisplay = document.createElement("div");
         selectionDisplay.style.padding = "5px";
@@ -260,16 +110,18 @@ var loadBuilder = function() {
         animations.appendChild(selectionDisplay);
 
         var animationDisplay = document.createElement("div");
-        animationDisplay.style.width = newLocation.tileSize.width;
-        animationDisplay.style.height = newLocation.tileSize.height;
+        animationDisplay.style.width = newLocation.tileSize;
+        animationDisplay.style.height = newLocation.tileSize;
         animationDisplay.style.display = "inline-block";
         var animationCycle = 0;
         var animateBackground = function() {
             if (currentCombo.length) {
                 animationDisplay.style.background = currentCombo[animationCycle++].style.background;
-                if( animationCycle == currentCombo.length )
+                if( animationCycle >= currentCombo.length )
                     animationCycle = 0;
             }
+            else
+                animationDisplay.style.background = "";
         };
         var bkgroundAnimation = setInterval(animateBackground, 250);
         selectionDisplay.appendChild(animationDisplay);
@@ -279,6 +131,32 @@ var loadBuilder = function() {
         selectedTiles.style.padding = "5px";
         selectedTiles.style.display = "inline-block";
         selectionDisplay.appendChild(selectedTiles);
+
+        var displayCombo = function(){
+            selectedTiles.innerHTML = "";
+            for (var i = 0; i < currentCombo.length; i++) {
+                var thisSelection = currentCombo[i];
+                var clipping = document.createElement("div");
+                clipping.style.margin = "3px";
+                clipping.style.width = newLocation.tileSize;
+                clipping.style.height = newLocation.tileSize;
+                clipping.style.background = document.getElementById(thisSelection.id).style.background;
+                clipping.style.display = "inline-block";
+                selectedTiles.appendChild(clipping);
+            }
+
+            if ( currentCombo.length ){
+                var saveButton = document.createElement("button");
+                saveButton.innerHTML = "Save this combination";
+                saveButton.addEventListener("click", saveCombo);
+            }
+        };
+
+        var saveCombo = function() {
+            savedCombos.push( JSON.parse( JSON.stringify(currentCombo) ) );
+            currentCombo = [];
+            displayCombo();
+        };
 
         var formCombo = function(e) {
             var thisTile = e.target;
@@ -292,17 +170,7 @@ var loadBuilder = function() {
                 thisTile.style.border = "none";
             }
 
-            selectedTiles.innerHTML = "";
-            for (var i = 0; i < currentCombo.length; i++) {
-                var thisSelection = currentCombo[i];
-                var clipping = document.createElement("div");
-                clipping.style.margin = "3px";
-                clipping.style.width = newLocation.tileSize.width;
-                clipping.style.height = newLocation.tileSize.height;
-                clipping.style.background = document.getElementById(thisSelection.id).style.background;
-                clipping.style.display = "inline-block";
-                selectedTiles.appendChild(clipping);
-            }
+            displayCombo();
 
         };
 
@@ -312,14 +180,14 @@ var loadBuilder = function() {
                 var clipping = document.createElement("div");
                 clipping.style.position = "absolute";
                 clipping.id = alphabet[r] + c;
-                clipping.style.left = ( ((c + 1) * 5) + (c * newLocation.tileSize.width) ) + "px";
-                clipping.style.top = ( ((r + 1) * 5) + (r * newLocation.tileSize.height) ) + "px";
-                clipping.style.width = newLocation.tileSize.width;
-                clipping.style.height = newLocation.tileSize.height;
+                clipping.style.left = ( ((c + 1) * 5) + (c * newLocation.tileSize) ) + "px";
+                clipping.style.top = ( ((r + 1) * 5) + (r * newLocation.tileSize) ) + "px";
+                clipping.style.width = newLocation.tileSize;
+                clipping.style.height = newLocation.tileSize;
         
                 var background = "url('" + newLocation.image + "') ";
-                background += ( c * -1 * newLocation.tileSize.width ) + "px ";
-                background += ( r * -1 * newLocation.tileSize.height ) + "px";
+                background += ( c * -1 * newLocation.tileSize ) + "px ";
+                background += ( r * -1 * newLocation.tileSize ) + "px";
                 clipping.style.background = background;
 
                 clipping.style.border = "none";
