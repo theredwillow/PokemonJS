@@ -87,6 +87,7 @@ var loadBuilder = function() {
     };
 
     steps[1] = function() {
+        backButton.style.visibility = "visible";
         stepTitle.innerHTML = "Combine tiles to animate them...";
 
         var displayTable = document.createElement("table");
@@ -117,11 +118,12 @@ var loadBuilder = function() {
         animationDisplay.style.width = newLocation.tileSize;
         animationDisplay.style.height = newLocation.tileSize;
         animationDisplay.style.display = "inline-block";
+        animationDisplay.style.margin = "3px";
         var animationCycle = 0;
         var animateBackground = function() {
-            if (currentCombo.length) {
+            if ( currentCombo.length && currentCombo[animationCycle] ) {
                 animationDisplay.style.background = currentCombo[animationCycle++].style.background;
-                if( animationCycle >= currentCombo.length )
+                if ( animationCycle >= currentCombo.length )
                     animationCycle = 0;
             }
             else
@@ -149,16 +151,36 @@ var loadBuilder = function() {
                 selectedTiles.appendChild(clipping);
             }
 
-            if ( currentCombo.length ){
+            if ( currentCombo.length > 1 ) {
                 var saveButton = document.createElement("button");
                 saveButton.innerHTML = "Save this combination";
                 saveButton.addEventListener("click", saveCombo);
+                selectedTiles.appendChild(saveButton);
             }
         };
 
         var saveCombo = function() {
+            var newAnimation = document.createElement("div");
+            newAnimation.style.border = "1px solid black";
+            newAnimation.style.padding = "5px";
+            newAnimation.style.margin = "3px";
+            for (var i = 0; i < currentCombo.length; i++) {
+                var thisTile = currentCombo[i];
+                var clipping = document.createElement("div");
+                clipping.id = thisTile.id;
+                clipping.style.width = newLocation.tileSize;
+                clipping.style.height = newLocation.tileSize;
+                clipping.style.background = thisTile.style.background;
+                clipping.style.display = "inline-block";
+                clipping.style.margin = "3px";
+                newAnimation.appendChild(clipping);
+                tiles.removeChild(thisTile);
+            }
+            selectionDisplay.appendChild(newAnimation);
+
             savedCombos.push( JSON.parse( JSON.stringify(currentCombo) ) );
             currentCombo = [];
+            
             displayCombo();
         };
 
