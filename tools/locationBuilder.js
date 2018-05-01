@@ -12,7 +12,7 @@ var loadBuilder = function() {
     var nextStep = 0;
     var steps = [];
 
-    var numOfRows = 1;
+    var numOfRows;
     var numOfColumns;
 
     var backButton = document.createElement("button");
@@ -57,14 +57,18 @@ var loadBuilder = function() {
             var longerSide = ifWidthIsLonger ? newLocation.imageSize.width : newLocation.imageSize.height;
             var shorterSide = ifWidthIsLonger ? newLocation.imageSize.height : newLocation.imageSize.width;
             
-            var tileSize = longerSide / numOfRows;
+            var numOfTilesOnLongSide = 1;
+            var tileSize = longerSide / numOfTilesOnLongSide;
 
             while ( shorterSide % tileSize ) {
-                numOfRows++;
-                tileSize = longerSide / numOfRows;
+                numOfTilesOnLongSide++;
+                tileSize = longerSide / numOfTilesOnLongSide;
             }
             newLocation.tileSize = tileSize;
-            numOfColumns = newLocation.imageSize.width / tileSize;            
+
+            var numOfTilesOnShortSide = shorterSide / tileSize;
+            numOfRows = ifWidthIsLonger ? numOfTilesOnShortSide : numOfTilesOnLongSide;
+            numOfColumns = ifWidthIsLonger ? numOfTilesOnLongSide : numOfTilesOnShortSide;
         };
 
         var img = document.createElement("img");
