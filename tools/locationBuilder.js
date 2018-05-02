@@ -138,6 +138,26 @@ var loadBuilder = function() {
         selectedTiles.style.display = "inline-block";
         selectionDisplay.appendChild(selectedTiles);
 
+        var getTileBackground = function(thisTile) {
+            var thisSavedTile = newLocation.tiles[thisTile.id];
+            var thisBackground = thisTile.style.background.replace(/url\(.*?\)\s/i, "").split(" ");
+            if (!thisSavedTile)
+                thisSavedTile = newLocation.tiles[thisTile.parentElement.id];
+            thisSavedTile.backgrounds.push( {x: thisBackground[0], y: thisBackground[1] } );
+        };
+        var saveTile = function(thisTile) {
+            newLocation.tiles[thisTile.id] = {};
+            newLocation.tiles[thisTile.id].backgrounds = [];
+            if ( thisTile.className.indexOf("animated") == -1 )
+                getTileBackground(thisTile);
+            else
+                thisTile.querySelectorAll(".frame-tile").forEach(getTileBackground);
+        };
+        var saveAllTiles = function() {
+            newLocation.tiles = {};
+            document.querySelectorAll(".still-tile, .animated-tile").forEach(saveTile);
+        };
+
         var displayCombo = function(){
             selectedTiles.innerHTML = "";
             for (var i = 0; i < currentCombo.length; i++) {
@@ -157,6 +177,7 @@ var loadBuilder = function() {
                 saveButton.addEventListener("click", saveCombo);
                 selectedTiles.appendChild(saveButton);
             }
+
         };
 
         var saveCombo = function() {
@@ -164,10 +185,13 @@ var loadBuilder = function() {
             newAnimation.style.border = "1px solid black";
             newAnimation.style.padding = "5px";
             newAnimation.style.margin = "3px";
+            newAnimation.className = "animated-tile";
             for (var i = 0; i < currentCombo.length; i++) {
                 var thisTile = currentCombo[i];
                 var clipping = document.createElement("div");
-                clipping.id = thisTile.id;
+                if ( !i )
+                    newAnimation.id = thisTile.id;
+                clipping.className = "frame-tile";
                 clipping.style.width = newLocation.tileSize;
                 clipping.style.height = newLocation.tileSize;
                 clipping.style.background = thisTile.style.background;
@@ -182,6 +206,7 @@ var loadBuilder = function() {
             currentCombo = [];
             
             displayCombo();
+            saveAllTiles();
         };
 
         var formCombo = function(e) {
@@ -206,6 +231,7 @@ var loadBuilder = function() {
                 var clipping = document.createElement("div");
                 clipping.style.position = "absolute";
                 clipping.id = alphabet[r] + c;
+                clipping.className = "still-tile";
                 clipping.style.left = ( ((c + 1) * 5) + (c * newLocation.tileSize) ) + "px";
                 clipping.style.top = ( ((r + 1) * 5) + (r * newLocation.tileSize) ) + "px";
                 clipping.style.width = newLocation.tileSize;
@@ -223,6 +249,89 @@ var loadBuilder = function() {
         
             }
         }
+        displayCombo();
+        saveAllTiles();
+
+    };
+
+    var animations = [];
+    var addBackgrounds = function() {
+        for (var i = 0; i < animations.length; i++) {
+            animations[i]();
+        }
+    };
+    setInterval(addBackgrounds, 500);
+    steps[2] = function() {
+        backButton.style.visibility = "visible";
+        stepTitle.innerHTML = "Create a default map...";
+
+        var displayTable = document.createElement("table");
+        displayTable.style.width = "100%";
+        display.appendChild(displayTable);
+
+        var row = document.createElement("tr");
+        displayTable.appendChild(row);
+
+        var tiles = document.createElement("td");
+        tiles.style.position = "relative";
+        row.appendChild(tiles);
+        tiles.style.height = ( (numOfRows * 5) + newLocation.imageSize.height ) + "px";
+        tiles.style.width = ( (numOfColumns * 5) + newLocation.imageSize.width ) + "px";
+
+        var map = document.createElement("td");
+        row.appendChild(map);
+
+        var a = {};
+        var r = 0;
+        var c = 0;
+        var allTheTiles = Object.keys(newLocation.tiles);
+        for (var t = 0; t < allTheTiles.length; t++) {
+        
+            var theseBackgrounds = newLocation.tiles[ allTheTiles[t] ].backgrounds;
+            var clipping = document.createElement("div");
+            clipping.style.position = "absolute";
+            clipping.id = allTheTiles[t];
+            clipping.className = "toolbar-tile";
+            clipping.style.left = ( ((c + 1) * 5) + (c * newLocation.tileSize) ) + "px";
+            clipping.style.top = ( ((r + 1) * 5) + (r * newLocation.tileSize) ) + "px";
+            clipping.style.width = newLocation.tileSize;
+            clipping.style.height = newLocation.tileSize;
+
+            var background = "url('" + newLocation.image + "') ";
+            background += theseBackgrounds[0].x + " ";
+            background += theseBackgrounds[0].y;
+            clipping.style.background = background;
+
+            if ( theseBackgrounds.length > 1 )
+                a[ allTheTiles[t] ] = 0;
+            // clipping.style.border = "none";
+            // clipping.addEventListener("click", formCombo);
+    
+            tiles.appendChild(clipping);
+
+            c++;
+            if ( c >= numOfColumns ) {
+                c = 0;
+                r++;
+            }
+
+        }
+
+        var animatedTiles = Object.keys(a);
+        var animateBackgrounds = function() {
+            for (var t = 0; t < animatedTiles.length; t++) {
+                var thisId = animatedTiles[t];
+                var theseBackgrounds = newLocation.tiles[thisId].backgrounds;
+                var background = "url('" + newLocation.image + "') ";
+                background += theseBackgrounds[ a[thisId] ].x + " ";
+                background += theseBackgrounds[ a[thisId]++ ].y;
+                document.getElementById(thisId).style.background = background;
+    
+                if ( a[thisId] >= theseBackgrounds.length )
+                    a[thisId] = 0;
+            }
+        };
+        var animationCycle = setInterval(animateBackgrounds, 500);
 
     };
 
