@@ -3,7 +3,7 @@ steps[0] = function() {
     stepTitle.innerHTML = "Choose an image...";
     
     var updateImage = function() {
-        var fileSrc = "/locations/" + fileUpload.value.replace("C:\\fakepath\\", "");
+        var fileSrc = "locations/" + fileUpload.value.replace("C:\\fakepath\\", "");
         img.src = "../" + fileSrc;
         newLocation.image = img.src;
     };
