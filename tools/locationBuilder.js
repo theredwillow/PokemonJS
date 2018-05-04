@@ -18,6 +18,7 @@ var goBack = function() {
     steps[(nextStep - 1)]();
 };
 backButton.addEventListener("click", goBack);
+backButton.addEventListener("focus", function() { backButton.blur(); } );
 
 var nextButton = document.querySelector("#nextButton");
 nextButton.style.visibility = "hidden";
@@ -26,15 +27,17 @@ var goForward = function() {
     steps[nextStep++]();
 };
 nextButton.addEventListener("click", goForward);
+nextButton.addEventListener("focus", function() { nextButton.blur(); } );
 
 var s = 0;
-var numOfSteps = 3;
+var numOfSteps = 6;
 var loadNextStep = function(){
     var script = document.createElement("script");
     script.onload = function () {
         s++;
-        if (s == numOfSteps)
+        if (s == numOfSteps) {
             steps[nextStep++]();
+        }
         else
             loadNextStep();
     };
