@@ -1,5 +1,5 @@
-steps[2] = function() {
-    stepTitle.innerHTML = "Designate which tiles are walkable...";
+steps[3] = function() {
+    stepTitle.innerHTML = "Designate which tiles are surfable...";
 
     var displayTable = document.createElement("table");
     displayTable.style.width = "100%";
@@ -14,15 +14,15 @@ steps[2] = function() {
     tiles.style.height = ( (numOfRows * 5) + newLocation.imageSize.height ) + "px";
     tiles.style.width = ( (numOfColumns * 5) + newLocation.imageSize.width ) + "px";
 
-    var chooseWalkable = function(e) {
+    var chooseSurfable = function(e) {
         var thisTile = e.target;
-        if ( /walk/.test(thisTile.className) ) {
+        if ( /surf/.test(thisTile.className) ) {
             thisTile.style.border = "none";
-            thisTile.className = thisTile.className.replace(" walk","");
+            thisTile.className = thisTile.className.replace(" surf","");
         }
         else {
             thisTile.style.border = "3px solid black";
-            thisTile.className += " walk";
+            thisTile.className += " surf";
         }
         saveButton.disabled = false;
     };
@@ -30,12 +30,10 @@ steps[2] = function() {
     var a = {};
     var r = 0;
     var c = 0;
-    var temporaryTiles = {};
     var allTheTiles = Object.keys(newLocation.tiles);
     for (var t = 0; t < allTheTiles.length; t++) {
 
-        temporaryTiles[ alphabet[r] + c ] = newLocation.tiles[ allTheTiles[t] ];
-        var theseBackgrounds = temporaryTiles[ alphabet[r] + c ].backgrounds;
+        var theseBackgrounds = newLocation.tiles[ allTheTiles[t] ].backgrounds;
         var clipping = document.createElement("div");
         clipping.style.position = "absolute";
         clipping.id = alphabet[r] + c;
@@ -54,7 +52,7 @@ steps[2] = function() {
         if ( theseBackgrounds.length > 1 )
             a[ alphabet[r] + c ] = 0;
 
-        clipping.addEventListener("click", chooseWalkable);
+        clipping.addEventListener("click", chooseSurfable);
 
         tiles.appendChild(clipping);
 
@@ -65,31 +63,14 @@ steps[2] = function() {
         }
 
     }
-    newLocation.tiles = temporaryTiles;
-
-    var animatedTiles = Object.keys(a);
-    var animateBackgrounds = function() {
-        for (var t = 0; t < animatedTiles.length; t++) {
-            var thisId = animatedTiles[t];
-            var theseBackgrounds = newLocation.tiles[thisId].backgrounds;
-            var background = "url('" + newLocation.image + "') ";
-            background += theseBackgrounds[ a[thisId] ].x + " ";
-            background += theseBackgrounds[ a[thisId]++ ].y;
-            document.getElementById(thisId).style.background = background;
-
-            if ( a[thisId] >= theseBackgrounds.length )
-                a[thisId] = 0;
-        }
-    };
-    window.animationCycle = setInterval(animateBackgrounds, 500);
 
     var buttonHolder = document.createElement("td");
     row.appendChild(buttonHolder);
 
     var save = function() {
-        var walkTiles = document.querySelectorAll(".walk");
-        for (var t = 0; t < walkTiles.length; t++) {
-            newLocation.tiles[ walkTiles[t].id ].walk = true;
+        var surfTiles = document.querySelectorAll(".surf");
+        for (var t = 0; t < surfTiles.length; t++) {
+            newLocation.tiles[ surfTiles[t].id ].surf = true;
         }
         saveButton.disabled = true;
     };
