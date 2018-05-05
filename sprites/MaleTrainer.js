@@ -1,4 +1,4 @@
-function MaleTrainer(name, type){
+function MaleTrainer(town, type){
 
 	var thisCharacter = this;
 
@@ -6,29 +6,17 @@ function MaleTrainer(name, type){
 	this.name = name || "Red";
 	this.gender = "male";
 
-	if ( this.type == "god" ) {
-		this.type = "player";
-		this.god = true;
-	}
-
-	this.image = "sprites/maleTrainer.png";
+	this.image = "maleTrainer.png";
+	this.imageSize = { width: 84, height: 97 };
 	this.tileSize = { width: 28, height: 32 };
+	this.imageDimensions = { x: 2, y: 2 };
 
-	this.element = document.createElement("div");
-	this.element.style.position = "absolute";
-    this.element.style.width = this.tileSize.width;
-	this.element.style.height = this.tileSize.height;
-	this.element.className = "trainer male no-walk";
-	this.element.style.top = "0px";
-	this.element.style.left = "0px";
-	document.body.appendChild(this.element);
-
-	this.tile = {
+	this.tiles = {
 		north:
 		{
-			standing: { x: 1, y: 3 },
-			leftFoot: { x: 0, y: 3 },
-			rightFoot: { x: 2, y: 3 }
+			standing: { x: 1, y: 2 },
+			leftFoot: { x: 0, y: 2 },
+			rightFoot: { x: 2, y: 2 }
 		},
 		south:
 		{
@@ -44,32 +32,91 @@ function MaleTrainer(name, type){
 		},
 		east:
 		{
-			standing: { x: 1, y: 2 },
-			leftFoot: { x: 0, y: 2 },
-			rightFoot: { x: 2, y: 2 }
+			standing: { x: 1, y: 1, flip: true },
+			leftFoot: { x: 0, y: 1, flip: true },
+			rightFoot: { x: 2, y: 1, flip: true }
 		}
 	};
-	// Automatically convert tile positions to CSS backgrounds
-	var directions = ["north", "south", "east", "west"];
-	var stances = ["standing", "leftFoot", "rightFoot"];
-	for (var i = 0; i < 4; i++) {
-		var dir = directions[i];
-		for (var j = 0; j < 3; j++) {
-			var stnc = stances[j];
-			var newVal = "url('" + this.image + "') ";
-			newVal += ( this.tile[dir][stnc].x * -1 * this.tileSize.width ) + "px";
-			newVal += " ";
-			newVal += ( this.tile[dir][stnc].y * -1 * this.tileSize.height ) + "px";
-			this.tile[dir][stnc] = newVal;
+
+	this.css = {};
+	this.css.element = document.head.querySelector("#MaleTrainer-style");
+	if ( !this.css.element ) {
+		this.css.element = document.createElement("style");
+		this.css.element.type = "text/css";
+		this.css.element.id = "MaleTrainer-style";
+
+		this.css.element.innerHTML = ".male-trainer {\n";
+		var ifWidthIsLonger = ( this.tileSize.width > this.tileSize.height );
+		var longerSide = ( ifWidthIsLonger ) ? this.tileSize.width : this.tileSize.height;
+		var shorterSide = ( ifWidthIsLonger ) ? this.tileSize.height : this.tileSize.width;
+		var newShorterSide = ( tileSize / longerSide ) * shorterSide;
+		this.css.element.innerHTML += "\tbackground-image: url('sprites/" + this.image + "');\n";
+		this.css.element.innerHTML += "\tbackground-size: ";
+		this.css.element.innerHTML += ( this.imageSize.width / this.imageDimensions.x ) + "px ";
+		this.css.element.innerHTML += ( this.imageSize.height / this.imageDimensions.y ) + "px;\n";
+		this.tileSize.width = (ifWidthIsLonger) ? tileSize : newShorterSide;
+		this.tileSize.height = (!ifWidthIsLonger) ? tileSize : newShorterSide;
+		this.css.element.innerHTML += "\twidth: " + this.tileSize.width + "px;\n";
+		this.css.element.innerHTML += "\theight: " + this.tileSize.height + "px;\n}\n";
+
+		for (var i = 0; i < 4; i++) {
+			var dir = directions[i];
+			for (var j = 0; j < 3; j++) {
+				var stance = stances[j];
+				this.css.element.innerHTML += ".male-trainer." + dir + "." + stance;
+				this.css.element.innerHTML += ( this.tiles[dir][stance].flip ) ? "\n{\n\t" : " { ";
+				this.css.element.innerHTML += "background-position: ";
+				this.css.element.innerHTML += ( this.tiles[dir][stance].x * -1 * this.tileSize.width ) + "px ";
+				this.css.element.innerHTML += ( this.tiles[dir][stance].y * -1 * this.tileSize.height ) + "px;";
+				if ( this.tiles[dir][stance].flip ) {
+					if ( dir == "east" || dir == "west" ) {
+						this.css.element.innerHTML += `
+						-moz-transform: scaleX(-1);
+						-o-transform: scaleX(-1);
+						-webkit-transform: scaleX(-1);
+						transform: scaleX(-1);
+						filter: FlipH;
+						-ms-filter: "FlipH";`;
+					}
+					else {
+						this.css.element.innerHTML += `
+						-moz-transform: scaleY(-1);
+						-o-transform: scaleY(-1);
+						-webkit-transform: scaleY(-1);
+						transform: scaleY(-1);
+						filter: FlipV;
+						-ms-filter: "FlipV";`;
+					}
+					this.css.element.innerHTML = this.css.element.innerHTML.replace(/\t{2,}/g, "\t");
+					this.css.element.innerHTML += "\n}\n";
+				}
+				else
+					this.css.element.innerHTML += " }\n";
+			}
 		}
+
+		document.head.appendChild(this.css.element);
 	}
+
+	this.draw = function(townIn, r, c) {
+		thisCharacter.element = document.createElement("div");
+		thisCharacter.element.id = this.name;
+		if ( !thisCharacter.facing )
+			this.face("south");
+		thisCharacter.element.className = "male-trainer";
+		thisCharacter.element.className += " " + thisCharacter.type;
+		thisCharacter.element.className += " " + thisCharacter.facing;
+		thisCharacter.element.className += " " + thisCharacter.step;
+		townIn.map.rows[r].cells[c].element.appendChild( thisCharacter.element );
+	};
 
 	this.face = function(direction) {
 		thisCharacter.facing = direction;
-		thisCharacter.element.style.background = thisCharacter.tile[direction].standing;
+		thisCharacter.element.className = deleteDirection(thisCharacter.element.className);
+		thisCharacter.element.className += " " + direction;
 	};
-	this.face("south");
 
+	/*
 	this.stride = "standing";
 	this.foot = "right";
 	this.step = function() {
@@ -184,5 +231,6 @@ function MaleTrainer(name, type){
 		document.addEventListener("releaseLeft", this.stop);
 
 	}
+	*/
 
 }

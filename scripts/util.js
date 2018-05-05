@@ -8,7 +8,7 @@ var tileSize = 16;
 var css = document.createElement("style");
 css.type = "text/css";
 css.id = "tile-size";
-css.innerHTML = ".mapTile { ";
+css.innerHTML = ".tile { ";
 css.innerHTML += "height: " + tileSize + "; ";
 css.innerHTML += "width: " + tileSize + "; ";
 css.innerHTML += "margin: 0px; }";
@@ -50,3 +50,8 @@ function detectCollision( sprite, x, y ) {
 }
 
 var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+var directions = ["north", "south", "east", "west"];
+var stances = ["standing", "leftFoot", "rightFoot"];
+
+var deleteDirection = function(str) { return str.replace(/\s?((north)|(south)|(east)|(west))/gi, ""); };
+var deleteStance = function(str) { return str.replace(/\s?((standing)|((left|right)Foot))/gi, ""); };

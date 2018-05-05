@@ -9,17 +9,18 @@
 <body>
 
     <script>
-        /*
-        var player = new MaleTrainer("Jared", "player");
-        player.moveTo(0, 60, "init");
-
-        var test = new MaleTrainer("Test");
-        test.moveTo(100, 100, "init");
-        */
 
         var town = new TestLocation();
-        console.log(town.image);
-        town.drawMap();
+        town.map.draw();
+
+        var player = new MaleTrainer("player");
+        player.name = "Jared";
+        player.draw(town, 1, 1);
+
+        /*
+        var test = new MaleTrainer("Test", town);
+        test.moveTo(100, 100, "init");
+        */
 
     </script>
 
