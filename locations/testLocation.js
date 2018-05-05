@@ -270,7 +270,7 @@ function TestLocation() {
     ];
 
     this.drawMap = function() {
-        thisLocation.map = {}
+        thisLocation.map = {};
         thisLocation.map.element = document.createElement("table");
         thisLocation.map.element.cellSpacing = "0px";
         thisLocation.map.element.cellPadding = "0px";
@@ -278,22 +278,22 @@ function TestLocation() {
         for (var r = 0; r < thisLocation.mapCoordinates.length; r++) {
             thisLocation.map.rows[r] = {};
             thisLocation.map.rows[r].element = document.createElement("tr");
+            thisLocation.map.rows[r].element.id = "row" + r;
             var thisRow = thisLocation.mapCoordinates[r];
             thisLocation.map.rows[r].cells = {};
             for (var c = 0; c < thisRow.length; c++) {
                 thisLocation.map.rows[r].cells[c] = {};
                 thisLocation.map.rows[r].cells[c].element = document.createElement("td");
                 var thisCell = thisRow[c];
-                thisLocation.map.rows[r].cells[c].tile = document.createElement("div");
-                thisLocation.map.rows[r].cells[c].tile.className = "mapTile";
+                thisLocation.map.rows[r].cells[c].element.id = "row" + r + "-cell" + c;
+                thisLocation.map.rows[r].cells[c].element.className = "mapTile";
                 if ( thisCell != "--" )
-                    thisLocation.map.rows[r].cells[c].tile.className += " " + thisCell;
-                thisLocation.map.rows[r].cells[c].element.appendChild( thisLocation.map.rows[r].cells[c].tile );
+                    thisLocation.map.rows[r].cells[c].element.className += " " + thisCell;
                 thisLocation.map.rows[r].element.appendChild( thisLocation.map.rows[r].cells[c].element );
             }
             thisLocation.map.element.appendChild( thisLocation.map.rows[r].element );
         }
-        document.body.appendChild(thisLocation.map.element);
+        document.body.appendChild( thisLocation.map.element );
     };
     
 }
