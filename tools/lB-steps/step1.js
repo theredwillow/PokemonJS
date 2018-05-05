@@ -112,9 +112,25 @@ steps[1] = function() {
             newAnimation.appendChild(clipping);
             tiles.removeChild(thisTile);
         }
+
+        var thisCombo = JSON.parse( JSON.stringify(currentCombo) );
+
+        /*
+        var remove = function() {
+            selectionDisplay.removeChild(newAnimation);
+            savedCombos.splice( savedCombos.indexOf(thisCombo), 1 );
+            console.log(savedCombos);
+        };
+
+        var removeButton = document.createElement("button");
+        removeButton.innerHTML = "Remove this animation";
+        newAnimation.appendChild(removeButton);
+        removeButton.addEventListener("click", remove);
+        */
+
         selectionDisplay.appendChild(newAnimation);
 
-        savedCombos.push( JSON.parse( JSON.stringify(currentCombo) ) );
+        savedCombos.push( thisCombo );
         currentCombo = [];
         
         displayCombo();
