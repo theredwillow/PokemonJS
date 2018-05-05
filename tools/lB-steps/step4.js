@@ -1,6 +1,4 @@
 steps[4] = function() {
-    backButton.style.visibility = "visible";
-    nextButton.style.visibility = "visible";
     stepTitle.innerHTML = "Create a default map...";
 
     var displayTable = document.createElement("table");
@@ -23,14 +21,14 @@ steps[4] = function() {
 
     var setTile = function(e) {
         var thisTile = e.target;
+        thisTile.className = thisTile.className.replace(/\s?tile-.*?(\s|$)/, "");
         if ( thisTile.style.background != stamp.style.background ) {
             thisTile.style.background = stamp.style.background;
-            thisTile.className += " tile-" + stamp.id;
+            thisTile.className += (thisTile.className) ? " tile-" : "tile-";
+            thisTile.className += stamp.id;
         }
-        else {
+        else
             thisTile.style.background = "";
-            thisTile.className = thisTile.className.replace(/tile-.*(\s|$)/, "");
-        }
 
         save();
 
@@ -156,7 +154,7 @@ steps[4] = function() {
             newLocation.map[r] = [];
             var theseCells = thisRow.getElementsByTagName("td");
             for (var c = 0, thisCell; thisCell = theseCells[c]; c++) {
-                var tileType = thisCell.className.match(/tile-(.*)(?:\s|$)/);
+                var tileType = thisCell.className.match(/tile-(.*?)(?:\s|$)/);
                 newLocation.map[r][c] = (tileType) ? tileType[1] : "--";
             }
         }

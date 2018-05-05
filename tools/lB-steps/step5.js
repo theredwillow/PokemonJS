@@ -1,5 +1,4 @@
 steps[5] = function() {
-    backButton.style.visibility = "visible";
     nextButton.style.visibility = "hidden";
     stepTitle.innerHTML = "Your location code is ready!";
 
