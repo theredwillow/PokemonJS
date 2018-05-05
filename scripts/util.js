@@ -4,6 +4,16 @@ loop.event = new Event("loopChanged");
 loop.dispatch = function() { document.dispatchEvent(loop.event); };
 loop.interval = setInterval(loop.dispatch, loop.timing);
 
+var tileSize = 16;
+var css = document.createElement("style");
+css.type = "text/css";
+css.id = "tile-size";
+css.innerHTML = ".mapTile { ";
+css.innerHTML += "height: " + tileSize + "; ";
+css.innerHTML += "width: " + tileSize + "; ";
+css.innerHTML += "margin: 0px; }";
+document.head.appendChild(css);
+
 function detectCollision( sprite, x, y ) {
     var allBlocking = document.querySelectorAll(".no-walk");
     sprite = {
