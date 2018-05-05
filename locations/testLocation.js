@@ -2,16 +2,16 @@ function TestLocation() {
 
     var thisLocation = this;
 
-    this.image = "palletTown.png";
+    thisLocation.image = "palletTown.png";
 
-    this.imageSize = {
+    thisLocation.imageSize = {
         "width": 64,
         "height": 176
     };
 
-    this.tileSize = 16;
+    thisLocation.tileSize = 16;
 
-    this.tiles = {
+    thisLocation.tiles = {
         "a0": {
             "backgrounds": [
                 { "x": "0px", "y": "0px" }
@@ -249,7 +249,7 @@ function TestLocation() {
     tileNames.forEach(generateCSS);
     document.head.appendChild(css);
 
-    this.mapCoordinates = [
+    thisLocation.mapCoordinates = [
         [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1" ],
         [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "b0", "a1" ],
         [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "a3", "a1" ],
@@ -269,29 +269,31 @@ function TestLocation() {
         [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "b1", "b1", "b1" ]
     ];
 
-    this.map = {}
-    this.map.element = document.createElement("table");
-    this.map.element.cellSpacing = "0px";
-    this.map.element.cellPadding = "0px";
-    this.map.rows = {};
-    for (var r = 0; r < this.mapCoordinates.length; r++) {
-        this.map.rows[r] = {};
-        this.map.rows[r].element = document.createElement("tr");
-        var thisRow = this.mapCoordinates[r];
-        this.map.rows[r].cells = {};
-        for (var c = 0; c < thisRow.length; c++) {
-            this.map.rows[r].cells[c] = {};
-            this.map.rows[r].cells[c].element = document.createElement("td");
-            var thisCell = thisRow[c];
-            this.map.rows[r].cells[c].tile = document.createElement("div");
-            this.map.rows[r].cells[c].tile.className = "mapTile";
-            if ( thisCell != "--" )
-                this.map.rows[r].cells[c].tile.className += " " + thisCell;
-            this.map.rows[r].cells[c].element.appendChild( this.map.rows[r].cells[c].tile );
-            this.map.rows[r].element.appendChild( this.map.rows[r].cells[c].element );
+    this.drawMap = function() {
+        thisLocation.map = {}
+        thisLocation.map.element = document.createElement("table");
+        thisLocation.map.element.cellSpacing = "0px";
+        thisLocation.map.element.cellPadding = "0px";
+        thisLocation.map.rows = {};
+        for (var r = 0; r < thisLocation.mapCoordinates.length; r++) {
+            thisLocation.map.rows[r] = {};
+            thisLocation.map.rows[r].element = document.createElement("tr");
+            var thisRow = thisLocation.mapCoordinates[r];
+            thisLocation.map.rows[r].cells = {};
+            for (var c = 0; c < thisRow.length; c++) {
+                thisLocation.map.rows[r].cells[c] = {};
+                thisLocation.map.rows[r].cells[c].element = document.createElement("td");
+                var thisCell = thisRow[c];
+                thisLocation.map.rows[r].cells[c].tile = document.createElement("div");
+                thisLocation.map.rows[r].cells[c].tile.className = "mapTile";
+                if ( thisCell != "--" )
+                    thisLocation.map.rows[r].cells[c].tile.className += " " + thisCell;
+                thisLocation.map.rows[r].cells[c].element.appendChild( thisLocation.map.rows[r].cells[c].tile );
+                thisLocation.map.rows[r].element.appendChild( thisLocation.map.rows[r].cells[c].element );
+            }
+            thisLocation.map.element.appendChild( thisLocation.map.rows[r].element );
         }
-        this.map.element.appendChild( this.map.rows[r].element );
-    }
-    document.body.appendChild(this.map.element);
+        document.body.appendChild(thisLocation.map.element);
+    };
     
 }
