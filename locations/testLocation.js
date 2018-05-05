@@ -269,26 +269,29 @@ function TestLocation() {
         [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "b1", "b1", "b1" ]
     ];
 
-    this.map = document.createElement("table");
-    this.map.cellSpacing = "0px";
-    this.map.cellPadding = "0px";
-    for (var r = 0; r < thisLocation.mapCoordinates.length; r++) {
-        console.log("r", r);
-        var rowElement = document.createElement("tr");
-        var thisRow = thisLocation.mapCoordinates[r];
+    this.map = {}
+    this.map.element = document.createElement("table");
+    this.map.element.cellSpacing = "0px";
+    this.map.element.cellPadding = "0px";
+    this.map.rows = {};
+    for (var r = 0; r < this.mapCoordinates.length; r++) {
+        this.map.rows[r] = {};
+        this.map.rows[r].element = document.createElement("tr");
+        var thisRow = this.mapCoordinates[r];
+        this.map.rows[r].cells = {};
         for (var c = 0; c < thisRow.length; c++) {
-            console.log("c", c);
-            var cellElement = document.createElement("td");
-            var thisTile = thisRow[c];
-            var tileElement = document.createElement("div");
-            tileElement.className = "mapTile";
-            if ( thisTile != "--" )
-                tileElement.className += " " + thisTile;
-            cellElement.appendChild(tileElement);
-            rowElement.appendChild(cellElement);
+            this.map.rows[r].cells[c] = {};
+            this.map.rows[r].cells[c].element = document.createElement("td");
+            var thisCell = thisRow[c];
+            this.map.rows[r].cells[c].tile = document.createElement("div");
+            this.map.rows[r].cells[c].tile.className = "mapTile";
+            if ( thisCell != "--" )
+                this.map.rows[r].cells[c].tile.className += " " + thisCell;
+            this.map.rows[r].cells[c].element.appendChild( this.map.rows[r].cells[c].tile );
+            this.map.rows[r].element.appendChild( this.map.rows[r].cells[c].element );
         }
-        thisLocation.map.appendChild(rowElement);
+        this.map.element.appendChild( this.map.rows[r].element );
     }
-    document.body.appendChild(thisLocation.map);
+    document.body.appendChild(this.map.element);
     
 }
