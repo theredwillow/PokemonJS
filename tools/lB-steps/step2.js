@@ -24,7 +24,7 @@ steps[2] = function() {
             thisTile.style.border = "3px solid black";
             thisTile.className += " walk";
         }
-        saveButton.disabled = false;
+        save();
     };
 
     var a = {};
@@ -91,13 +91,6 @@ steps[2] = function() {
         for (var t = 0; t < walkTiles.length; t++) {
             newLocation.tiles[ walkTiles[t].id ].walk = true;
         }
-        saveButton.disabled = true;
     };
-
-    var saveButton = document.createElement("button");
-    saveButton.innerHTML = "Save Tiles";
-    saveButton.disabled = true;
-    buttonHolder.appendChild(saveButton);
-    saveButton.addEventListener("click", save);
 
 };

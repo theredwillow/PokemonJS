@@ -24,7 +24,7 @@ steps[3] = function() {
             thisTile.style.border = "3px solid black";
             thisTile.className += " surf";
         }
-        saveButton.disabled = false;
+        save();
     };
 
     var a = {};
@@ -72,13 +72,6 @@ steps[3] = function() {
         for (var t = 0; t < surfTiles.length; t++) {
             newLocation.tiles[ surfTiles[t].id ].surf = true;
         }
-        saveButton.disabled = true;
     };
-
-    var saveButton = document.createElement("button");
-    saveButton.innerHTML = "Save Tiles";
-    saveButton.disabled = true;
-    buttonHolder.appendChild(saveButton);
-    saveButton.addEventListener("click", save);
 
 };
