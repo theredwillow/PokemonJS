@@ -2,16 +2,19 @@ function TestLocation() {
 
     var thisLocation = this;
 
-    thisLocation.image = "palletTown.png";
+    this.name = "Pallet Town (Test)";
+    this.id = this.name.replace(/[\s()\[\]]/g,"");
 
-    thisLocation.imageSize = {
+    this.image = "palletTown.png";
+
+    this.imageSize = {
         "width": 64,
         "height": 176
     };
 
-    thisLocation.tileSize = 16;
+    this.tileSize = 16;
 
-    thisLocation.tiles = {
+    this.tiles = {
         "a0": {
             "backgrounds": [
                 { "x": "0px", "y": "0px" }
@@ -232,24 +235,57 @@ function TestLocation() {
         }
     };
 
-    var css = document.createElement("style");
-    css.type = "text/css";
-    css.innerHTML = ".mapTile { ";
-    css.innerHTML += "height: " + thisLocation.tileSize + "; ";
-    css.innerHTML += "width: " + thisLocation.tileSize + "; ";
-    css.innerHTML += "margin: 0px; }\n";
-    var generateCSS = function(t) {
-        css.innerHTML += "." + t;
-        css.innerHTML += " { background: ";
-        css.innerHTML += "url('locations/" + thisLocation.image + "') ";
+    this.css = {};
+    this.css.static = document.createElement("style");
+    this.css.static.type = "text/css";
+    this.css.static.innerHTML = ".mapTile { ";
+    this.css.static.innerHTML += "height: " + thisLocation.tileSize + "; ";
+    this.css.static.innerHTML += "width: " + thisLocation.tileSize + "; ";
+    this.css.static.innerHTML += "margin: 0px; }\n";
+
+    this.css.animated = document.createElement("style");
+    this.css.animated.type = "text/css";
+    this.css.states = {};
+
+    var generateRule = function(t) {
         var thisTilesLoc = thisLocation.tiles[t].backgrounds[0];
-        css.innerHTML += thisTilesLoc.x + " " + thisTilesLoc.y + " }\n";
+        if ( thisLocation.tiles[t].backgrounds.length == 1 ) {
+            thisLocation.css.static.innerHTML += "." + thisLocation.id + "-" + t;
+            thisLocation.css.static.innerHTML += " { background: ";
+            thisLocation.css.static.innerHTML += "url('locations/" + thisLocation.image + "') ";
+            thisLocation.css.static.innerHTML += thisTilesLoc.x + " " + thisTilesLoc.y + " }\n";
+        }
+        else {
+            thisLocation.css.states[t] = 0;
+            thisLocation.css.animated.innerHTML += "." + thisLocation.id + "-" + t;
+            thisLocation.css.animated.innerHTML += " { background: ";
+            thisLocation.css.animated.innerHTML += "url('locations/" + thisLocation.image + "') ";
+            thisLocation.css.animated.innerHTML += thisTilesLoc.x + " " + thisTilesLoc.y + " }\n";
+        }
+    };
+    this.css.changeBackgrounds = function() {
+        console.log("Changing backgrounds");
+        thisLocation.css.animated.innerHTML = "";
+        for (var a = 0; a < thisLocation.css.animatedTileNames.length; a++) {
+            var t = thisLocation.css.animatedTileNames[a];
+            thisLocation.css.animated.innerHTML += "." + thisLocation.id + "-" + t;
+            thisLocation.css.animated.innerHTML += " { background: ";
+            thisLocation.css.animated.innerHTML += "url('locations/" + thisLocation.image + "') ";
+            var thisTilesLoc = thisLocation.tiles[t].backgrounds[ thisLocation.css.states[t] ];
+            thisLocation.css.animated.innerHTML += thisTilesLoc.x + " " + thisTilesLoc.y + " }\n";
+            var isLast = ( thisLocation.css.states[t] >= thisLocation.tiles[t].backgrounds.length - 1 );
+            thisLocation.css.states[t] = isLast ? 0 : thisLocation.css.states[t] + 1;
+        }
     };
     var tileNames = Object.keys(thisLocation.tiles);
-    tileNames.forEach(generateCSS);
-    document.head.appendChild(css);
+    tileNames.forEach(generateRule);
+    document.head.appendChild(this.css.static);
+    document.head.appendChild(this.css.animated);
+    this.css.animatedTileNames = Object.keys(this.css.states);
+    if ( this.css.animatedTileNames.length )
+        document.addEventListener("loopChanged", this.css.changeBackgrounds);
 
-    thisLocation.mapCoordinates = [
+    this.mapCoordinates = [
         [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1" ],
         [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "b0", "a1" ],
         [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "a3", "a1" ],
@@ -288,7 +324,7 @@ function TestLocation() {
                 thisLocation.map.rows[r].cells[c].element.id = "row" + r + "-cell" + c;
                 thisLocation.map.rows[r].cells[c].element.className = "mapTile";
                 if ( thisCell != "--" )
-                    thisLocation.map.rows[r].cells[c].element.className += " " + thisCell;
+                    thisLocation.map.rows[r].cells[c].element.className += " " + thisLocation.id + "-" + thisCell;
                 thisLocation.map.rows[r].element.appendChild( thisLocation.map.rows[r].cells[c].element );
             }
             thisLocation.map.element.appendChild( thisLocation.map.rows[r].element );

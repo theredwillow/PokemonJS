@@ -1,3 +1,9 @@
+var loop = {};
+loop.timing = 750;
+loop.event = new Event("loopChanged");
+loop.dispatch = function() { document.dispatchEvent(loop.event); };
+loop.interval = setInterval(loop.dispatch, loop.timing);
+
 function detectCollision( sprite, x, y ) {
     var allBlocking = document.querySelectorAll(".no-walk");
     sprite = {
