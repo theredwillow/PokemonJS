@@ -23,8 +23,6 @@ steps[4] = function() {
 
     var setTile = function(e) {
         var thisTile = e.target;
-        if ( /toolbar-tile/.test( thisTile.className ) )
-            return;
         if ( thisTile.style.background != stamp.style.background ) {
             thisTile.style.background = stamp.style.background;
             thisTile.className += " tile-" + stamp.id;
@@ -33,6 +31,8 @@ steps[4] = function() {
             thisTile.style.background = "";
             thisTile.className = thisTile.className.replace(/tile-.*(\s|$)/, "");
         }
+
+        save();
 
         if (
              thisTile.parentNode == document.querySelector("#map tr") ||
@@ -92,11 +92,11 @@ steps[4] = function() {
     var selectMap = function(e) {
         if (mapHighlight) {
             mapHighlight.innerHTML = "";
-            mapHighlight.className = stamp.className.replace(" currentHighlight","");
+            mapHighlight.className = mapHighlight.className.replace(/\s?currentHighlight/,"").replace(/^\s/,"");
         }
         mapHighlight = e.target;
         mapHighlight.innerHTML = "&#9632;";
-        mapHighlight.className += " currentHighlight";
+        mapHighlight.className += (mapHighlight.className) ? " currentHighlight" : "currentHighlight";
     };
 
     var drawMapTile = function(parentEl, siblingEl) {
@@ -161,8 +161,6 @@ steps[4] = function() {
             }
         }
     };
-
-    mapHolder.addEventListener("click", save);
 
     var centerRow = document.createElement("tr");
     map.appendChild(centerRow);
