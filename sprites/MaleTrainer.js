@@ -1,4 +1,4 @@
-function MaleTrainer(town, type){
+function MaleTrainer(type){
 
 	var thisCharacter = this;
 
@@ -50,6 +50,7 @@ function MaleTrainer(town, type){
 		var longerSide = ( ifWidthIsLonger ) ? this.tileSize.width : this.tileSize.height;
 		var shorterSide = ( ifWidthIsLonger ) ? this.tileSize.height : this.tileSize.width;
 		var newShorterSide = ( tileSize / longerSide ) * shorterSide;
+		this.css.element.innerHTML += "\tposition: absolute;\n";
 		this.css.element.innerHTML += "\tbackground-image: url('sprites/" + this.image + "');\n";
 		this.css.element.innerHTML += "\tbackground-size: ";
 		this.css.element.innerHTML += ( this.imageSize.width / this.imageDimensions.x ) + "px ";
@@ -106,8 +107,13 @@ function MaleTrainer(town, type){
 		thisCharacter.element.className = "male-trainer";
 		thisCharacter.element.className += " " + thisCharacter.type;
 		thisCharacter.element.className += " " + thisCharacter.facing;
-		thisCharacter.element.className += " " + thisCharacter.step;
-		townIn.map.rows[r].cells[c].element.appendChild( thisCharacter.element );
+		thisCharacter.element.className += " " + thisCharacter.stance;
+		thisCharacter.element.style.top = townIn.map.rows[r].top + ( tileSize / 2 );
+		thisCharacter.element.style.left = townIn.map.rows[r].cells[c].left + ( tileSize / 2 );
+		document.body.appendChild( thisCharacter.element );
+
+		if ( thisCharacter.type == "character" )
+			this.element.addEventListener("talk", thisCharacter.onTalk, false);
 	};
 
 	this.face = function(direction) {
@@ -116,8 +122,8 @@ function MaleTrainer(town, type){
 		thisCharacter.element.className += " " + direction;
 	};
 
+	this.stance = "standing";
 	/*
-	this.stride = "standing";
 	this.foot = "right";
 	this.step = function() {
 		if ( thisCharacter.stride == "standing" ) {
@@ -133,6 +139,8 @@ function MaleTrainer(town, type){
 		thisCharacter.element.style.background = thisCharacter.tile[thisCharacter.facing].standing;
 	};
 	this.stop = function() { setTimeout(thisCharacter.stand, 100); };
+	*/
+
 	this.moveTo = function(x, y, special) {
 		var currentX = Number(thisCharacter.element.style.left.replace("px","")) || 0;
 		var currentY = Number(thisCharacter.element.style.top.replace("px","")) || 0;
@@ -152,14 +160,14 @@ function MaleTrainer(town, type){
 		else if ( y == "+" )
 			y = currentY - currentHeight;
 		
-		if ( !special )
-			thisCharacter.step();
+		// if ( !special )
+		//	thisCharacter.step();
 		if ( !detectCollision(thisCharacter, x, y) || thisCharacter.god ) {
 			thisCharacter.element.style.left = x + "px";
 			thisCharacter.element.style.top = y + "px";
 		}
-		else
-			thisCharacter.stop();
+		//else
+		//	thisCharacter.stop();
 	};
 	this.moveNorth = function() {
 		thisCharacter.face("north");
@@ -180,13 +188,10 @@ function MaleTrainer(town, type){
 
 	if (this.type == "character") {
 
-		this.element.className += " villager";
-
 		this.talk = new Event("talk");
 		this.onTalk = function() {
 			alert("You look an awful lot like me.");
 		};
-		this.element.addEventListener("talk", thisCharacter.onTalk, false);
 
 		this.p = 0;
 		this.pace = 3;
@@ -207,7 +212,7 @@ function MaleTrainer(town, type){
 			    	thisCharacter.moveWest();
 			    	break;
 			}
-			thisCharacter.stop();
+			//thisCharacter.stop();
 
 			if ( thisCharacter.p < 7 )
 				thisCharacter.p++;
@@ -219,18 +224,18 @@ function MaleTrainer(town, type){
 	}
 	else {
 
-		thisCharacter.element.className += " player";
 		document.addEventListener("pushUp", this.moveNorth);
 		document.addEventListener("pushDown", this.moveSouth);
 		document.addEventListener("pushRight", this.moveEast);
 		document.addEventListener("pushLeft", this.moveWest);
 
+		/*
 		document.addEventListener("releaseUp", this.stop);
 		document.addEventListener("releaseDown", this.stop);
 		document.addEventListener("releaseRight", this.stop);
 		document.addEventListener("releaseLeft", this.stop);
+		*/
 
 	}
-	*/
 
 }

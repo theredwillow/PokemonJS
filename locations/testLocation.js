@@ -6,278 +6,317 @@ function TestLocation() {
     this.id = this.name.replace(/[\s()\[\]]/g,"");
 
     this.image = "palletTown.png";
+    this.imageDimensions = { x: 4, y: 11 };
 
     this.map = {};
 
     this.map.tiles = {
         "a0": {
             "backgrounds": [
-                { "x": "0px", "y": "0px" }
+                { "x": "0", "y": "0" }
             ],
             "walk": true
         },
         "a1": {
             "backgrounds": [
-                { "x": "-16px", "y": "0px" }
+                { "x": "1", "y": "0" }
             ]
         },
         "a2": {
             "backgrounds": [
-                { "x": "-32px", "y": "0px" }
+                { "x": "2", "y": "0" }
             ],
             "walk": true
         },
         "a3": {
             "backgrounds": [
-                { "x": "-48px", "y": "0px" }
+                { "x": "3", "y": "0" }
             ],
             "walk": true
         },
         "b0": {
             "backgrounds": [
-                { "x": "0px", "y": "-16px" }
+                { "x": "0", "y": "1" }
             ],
             "walk": true
         },
         "b1": {
             "backgrounds": [
-                { "x": "-16px", "y": "-16px" }
+                { "x": "1", "y": "1" }
             ],
             "walk": true
         },
         "b2": {
             "backgrounds": [
-                { "x": "-32px", "y": "-16px" }
+                { "x": "2", "y": "1" }
             ]
         },
         "b3": {
             "backgrounds": [
-                { "x": "-48px", "y": "-16px" }
+                { "x": "3", "y": "1" }
             ]
         },
         "c0": {
             "backgrounds": [
-                { "x": "0px", "y": "-32px" }
+                { "x": "0", "y": "2" }
             ]
         },
         "c1": {
             "backgrounds": [
-                { "x": "-16px", "y": "-32px" }
+                { "x": "1", "y": "2" }
             ]
         },
         "c2": {
             "backgrounds": [
-                { "x": "-32px", "y": "-32px" }
+                { "x": "2", "y": "2" }
             ]
         },
         "c3": {
             "backgrounds": [
-                { "x": "-48px", "y": "-32px" }
+                { "x": "3", "y": "2" }
             ]
         },
         "d0": {
             "backgrounds": [
-                { "x": "0px", "y": "-48px" }
+                { "x": "0", "y": "3" }
             ]
         },
         "d1": {
             "backgrounds": [
-                { "x": "-16px", "y": "-48px" }
+                { "x": "1", "y": "3" }
             ]
         },
         "d2": {
             "backgrounds": [
-                { "x": "-32px", "y": "-48px" }
+                { "x": "2", "y": "3" }
             ]
         },
         "d3": {
             "backgrounds": [
-                { "x": "-48px", "y": "-48px" }
+                { "x": "3", "y": "3" }
             ]
         },
         "e0": {
             "backgrounds": [
-                { "x": "0px", "y": "-64px" }
+                { "x": "0", "y": "4" }
             ]
         },
         "e1": {
             "backgrounds": [
-                { "x": "-16px", "y": "-64px" }
+                { "x": "1", "y": "4" }
             ]
         },
         "e2": {
             "backgrounds": [
-                { "x": "-32px", "y": "-64px" }
+                { "x": "2", "y": "4" }
             ]
         },
         "e3": {
             "backgrounds": [
-                { "x": "-48px", "y": "-64px" }
+                { "x": "3", "y": "4" }
             ]
         },
         "f0": {
             "backgrounds": [
-                { "x": "0px", "y": "-80px" }
+                { "x": "0", "y": "5" }
             ]
         },
         "f1": {
             "backgrounds": [
-                { "x": "-16px", "y": "-80px" }
+                { "x": "1", "y": "5" }
             ]
         },
         "f2": {
             "backgrounds": [
-                { "x": "-16px", "y": "-96px" }
+                { "x": "1", "y": "6" }
             ]
         },
         "f3": {
             "backgrounds": [
-                { "x": "-32px", "y": "-96px" }
+                { "x": "2", "y": "6" }
             ]
         },
         "g0": {
             "backgrounds": [
-                { "x": "-48px", "y": "-96px" }
+                { "x": "3", "y": "6" }
             ]
         },
         "g1": {
             "backgrounds": [
-                { "x": "0px", "y": "-112px" }
+                { "x": "0", "y": "7" }
             ]
         },
         "g2": {
             "backgrounds": [
-                { "x": "-16px", "y": "-112px" }
+                { "x": "1", "y": "7" }
             ]
         },
         "g3": {
             "backgrounds": [
-                { "x": "-32px", "y": "-112px" }
+                { "x": "2", "y": "7" }
             ]
         },
         "h0": {
             "backgrounds": [
-                { "x": "-32px", "y": "-128px" }
+                { "x": "2", "y": "8" }
             ]
         },
         "h1": {
             "backgrounds": [
-                { "x": "-48px", "y": "-128px" }
+                { "x": "3", "y": "8" }
             ]
         },
         "h2": {
             "backgrounds": [
-                { "x": "0px", "y": "-144px" }
+                { "x": "0", "y": "9" }
             ]
         },
         "h3": {
             "backgrounds": [
-                { "x": "-16px", "y": "-144px" }
+                { "x": "1", "y": "9" }
             ],
             "surf": true
         },
         "i0": {
             "backgrounds": [
-                { "x": "-32px", "y": "-144px" }
+                { "x": "2", "y": "9" }
             ],
             "surf": true
         },
         "i1": {
             "backgrounds": [
-                { "x": "-48px", "y": "-144px" }
+                { "x": "3", "y": "9" }
             ],
             "surf": true
         },
         "i2": {
             "backgrounds": [
-                { "x": "0px", "y": "-160px" }
+                { "x": "0", "y": "10" }
             ],
             "surf": true
         },
         "i3": {
             "backgrounds": [
-                { "x": "-16px", "y": "-160px" }
+                { "x": "1", "y": "10" }
             ],
             "surf": true
         },
         "j0": {
             "backgrounds": [
-                { "x": "-32px", "y": "-160px" }
+                { "x": "2", "y": "10" }
             ],
             "surf": true
         },
         "j1": {
             "backgrounds": [
-                { "x": "-48px", "y": "-160px" }
+                { "x": "3", "y": "10" }
             ],
             "surf": true
         },
         "j2": {
             "backgrounds": [
-                { "x": "-32px", "y": "-80px" },
-                { "x": "-48px", "y": "-80px" },
-                { "x": "0px", "y": "-96px" }
+                { "x": "2", "y": "5" },
+                { "x": "3", "y": "5" },
+                { "x": "0", "y": "6" }
             ],
             "walk": true
         },
         "j3": {
             "backgrounds": [
-                { "x": "-48px", "y": "-112px" },
-                { "x": "0px", "y": "-128px" },
-                { "x": "-16px", "y": "-128px" }
+                { "x": "3", "y": "7" },
+                { "x": "0", "y": "8" },
+                { "x": "1", "y": "8" }
             ],
             "walk": true
         }
     };
 
     this.css = {};
-    this.css.static = document.createElement("style");
-    this.css.static.type = "text/css";
-    this.css.static.id = thisLocation.id + "-staticStyles";
-    this.css.static.innerHTML += "." + thisLocation.id;
-    this.css.static.innerHTML += " { background-image: url('locations/" + thisLocation.image + "') }\n";
-
-    this.css.animated = document.createElement("style");
-    this.css.animated.type = "text/css";
-    this.css.animated.id = thisLocation.id + "-animatedStyles";
     this.css.states = {};
 
-    var generateRule = function(t) {
-        var thisTilesLoc = thisLocation.map.tiles[t].backgrounds[0];
-        if ( thisLocation.map.tiles[t].backgrounds.length == 1 ) {
-            thisLocation.css.static.innerHTML += "." + thisLocation.id + "." + t;
-            thisLocation.css.static.innerHTML += " { background-position: ";
-            thisLocation.css.static.innerHTML += thisTilesLoc.x + " " + thisTilesLoc.y + " }\n";
+    this.css.generateRule = function(tileName) {
+        var thisTile = thisLocation.map.tiles[tileName];
+        if ( thisTile.backgrounds.length > 1 ) {
+            thisLocation.css.states[tileName] = thisLocation.css.states[tileName] || 0;
+            var thisTilesCoor = thisTile.backgrounds[ thisLocation.css.states[tileName]++ ];
+            thisLocation.css.animated.innerHTML += "." + thisLocation.id + "." + tileName;
+            thisLocation.css.animated.innerHTML += " { background-position: ";
+            thisLocation.css.animated.innerHTML += (thisTilesCoor.x * -1 * tileSize) + "px ";
+            thisLocation.css.animated.innerHTML += (thisTilesCoor.y * -1 * tileSize) + "px }\n";
+            if ( thisLocation.css.states[tileName] >= thisTile.backgrounds.length )
+                delete thisLocation.css.states[tileName];
         }
         else {
-            thisLocation.css.states[t] = 0;
-            thisLocation.css.animated.innerHTML += "." + thisLocation.id + "." + t;
-            thisLocation.css.animated.innerHTML += " { background-position: ";
-            thisLocation.css.animated.innerHTML += thisTilesLoc.x + " " + thisTilesLoc.y + " }\n";
+            var thisTilesCoor = thisTile.backgrounds[0];
+            thisLocation.css.static.innerHTML += "." + thisLocation.id + "." + tileName;
+            thisLocation.css.static.innerHTML += " { background-position: ";
+            thisLocation.css.static.innerHTML += (thisTilesCoor.x * -1 * tileSize) + "px ";
+            thisLocation.css.static.innerHTML += (thisTilesCoor.y * -1 * tileSize) + "px }\n";
         }
-    };
+    };    
 
-    this.css.changeBackgrounds = function() {
+    this.css.animateBackgrounds = function() {
         thisLocation.css.animated.innerHTML = "";
         for (var a = 0; a < thisLocation.css.animatedTileNames.length; a++) {
-            var t = thisLocation.css.animatedTileNames[a];
-            thisLocation.css.animated.innerHTML += "." + thisLocation.id + "." + t;
-            thisLocation.css.animated.innerHTML += " { background-position: ";
-            var thisTilesLoc = thisLocation.map.tiles[t].backgrounds[ thisLocation.css.states[t] ];
-            thisLocation.css.animated.innerHTML += thisTilesLoc.x + " " + thisTilesLoc.y + " }\n";
-            var isLast = ( thisLocation.css.states[t] >= thisLocation.map.tiles[t].backgrounds.length - 1 );
-            thisLocation.css.states[t] = isLast ? 0 : thisLocation.css.states[t] + 1;
+            var thisTile = thisLocation.css.animatedTileNames[a];
+            thisLocation.css.generateRule(thisTile);
         }
     };
 
-    var tileNames = Object.keys(thisLocation.map.tiles);
-    tileNames.forEach(generateRule);
-    document.head.appendChild(this.css.static);
-    this.css.animatedTileNames = Object.keys(this.css.states);
-    if ( this.css.animatedTileNames.length ) {
-        document.head.appendChild(this.css.animated);
-        document.addEventListener("loopChanged", this.css.changeBackgrounds);
-    }
+    this.css.tileNames = Object.keys(thisLocation.map.tiles);
+    this.css.animatedTileNames = [];
+    this.css.tileNames.forEach(function(t){ if(thisLocation.map.tiles[t].backgrounds.length > 1) { thisLocation.css.animatedTileNames.push(t); } });
+
+    this.css.generateStyles = (function() {
+
+        var imageStyle = document.getElementById(thisLocation.id + "-imageStyle");
+        if ( !imageStyle ) {
+            thisLocation.css.image = document.createElement("style");
+            thisLocation.css.image.type = "text/css";
+            thisLocation.css.image.id = thisLocation.id + "-imageStyle";
+            thisLocation.css.image.innerHTML += "." + thisLocation.id;
+            thisLocation.css.image.innerHTML += " { background-image: url('locations/" + thisLocation.image + "') }";
+            document.head.appendChild(thisLocation.css.image);
+        }
+        else if ( !thisLocation.css.image ) {
+            thisLocation.css.image = imageStyle;
+        }
+
+        var staticStyle = document.getElementById(thisLocation.id + "-staticStyle");
+        if ( !staticStyle ) {
+            thisLocation.css.static = document.createElement("style");
+            thisLocation.css.static.type = "text/css";
+            thisLocation.css.static.id = thisLocation.id + "-staticStyle";
+            document.head.appendChild(thisLocation.css.static);
+        }
+        else if ( !thisLocation.css.static ) {
+            thisLocation.css.static = staticStyle;
+        }
+
+        if ( thisLocation.css.animatedTileNames.length ) {
+            var animatedStyle = document.getElementById(thisLocation.id + "-animatedStyle");
+            if ( !animatedStyle ) {
+                thisLocation.css.animated = document.createElement("style");
+                thisLocation.css.animated.type = "text/css";
+                thisLocation.css.animated.id = thisLocation.id + "-animatedStyle";
+                document.head.appendChild(thisLocation.css.animated);
+            }
+            else if ( !thisLocation.css.animated ) {
+                thisLocation.css.animated = animatedStyle;
+            }
+
+            if ( !thisLocation.css.animationEvent ) {
+                thisLocation.css.animationEvent = document.addEventListener("loopChanged", thisLocation.css.animateBackgrounds);
+            }
+        }
+
+        thisLocation.css.static.innerHTML = "." + thisLocation.id;
+        thisLocation.css.static.innerHTML += " { background-size: ";
+        thisLocation.css.static.innerHTML += ( thisLocation.imageDimensions.x * tileSize ) + "px ";
+        thisLocation.css.static.innerHTML += ( thisLocation.imageDimensions.y * tileSize ) + "px; }\n";
+
+        thisLocation.css.tileNames.forEach(thisLocation.css.generateRule);
+    })();
 
     this.map.coordinates = [
         [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1" ],
