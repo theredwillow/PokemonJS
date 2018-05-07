@@ -2,11 +2,15 @@ function TestLocation() {
 
     var thisLocation = this;
 
+    this.type = "location";
+
     this.name = "Pallet Town (Test)";
     this.id = this.name.replace(/[\s()\[\]]/g,"");
 
     this.image = "palletTown.png";
     this.imageDimensions = { x: 4, y: 11 };
+	this.imageSize = { width: 64, height: 176 };
+	this.tileSize = { width: 16, height: 16 };
 
     this.map = {};
 
