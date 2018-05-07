@@ -3,8 +3,9 @@ loop.timing = 750;
 loop.event = new Event("loopChanged");
 loop.dispatch = function() { document.dispatchEvent(loop.event); };
 loop.interval = setInterval(loop.dispatch, loop.timing);
+loop.listeners = {};
 
-var tileSize = 16;
+var tileSize = 20;
 var css = document.createElement("style");
 css.type = "text/css";
 css.id = "tile-size";

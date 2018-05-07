@@ -265,7 +265,11 @@ function TestLocation() {
 
     this.css.tileNames = Object.keys(thisLocation.map.tiles);
     this.css.animatedTileNames = [];
-    this.css.tileNames.forEach(function(t){ if(thisLocation.map.tiles[t].backgrounds.length > 1) { thisLocation.css.animatedTileNames.push(t); } });
+    var addAnimatedTiles = function(t){
+        if ( thisLocation.map.tiles[t].backgrounds.length > 1 )
+            thisLocation.css.animatedTileNames.push(t);
+    };
+    this.css.tileNames.forEach(addAnimatedTiles);
 
     this.css.generateStyles = (function() {
 
@@ -305,8 +309,8 @@ function TestLocation() {
                 thisLocation.css.animated = animatedStyle;
             }
 
-            if ( !thisLocation.css.animationEvent ) {
-                thisLocation.css.animationEvent = document.addEventListener("loopChanged", thisLocation.css.animateBackgrounds);
+            if ( !loop.listeners[ thisLocation.id + "Animation" ] ) {
+                loop.listeners[ thisLocation.id + "Animation" ] = document.addEventListener("loopChanged", thisLocation.css.animateBackgrounds);
             }
         }
 
