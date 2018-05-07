@@ -9,7 +9,7 @@ function MaleTrainer(type){
 	this.image = "maleTrainer.png";
 	this.imageSize = { width: 84, height: 97 };
 	this.tileSize = { width: 28, height: 32 };
-	this.imageDimensions = { x: 2, y: 2 };
+	this.imageDimensions = { x: 3, y: 3 };
 
 	this.tiles = {
 		north:
@@ -50,13 +50,13 @@ function MaleTrainer(type){
 		var longerSide = ( ifWidthIsLonger ) ? this.tileSize.width : this.tileSize.height;
 		var shorterSide = ( ifWidthIsLonger ) ? this.tileSize.height : this.tileSize.width;
 		var newShorterSide = ( tileSize / longerSide ) * shorterSide;
+		this.tileSize.width = (ifWidthIsLonger) ? tileSize : newShorterSide;
+		this.tileSize.height = (!ifWidthIsLonger) ? tileSize : newShorterSide;
 		this.css.element.innerHTML += "\tposition: absolute;\n";
 		this.css.element.innerHTML += "\tbackground-image: url('sprites/" + this.image + "');\n";
 		this.css.element.innerHTML += "\tbackground-size: ";
-		this.css.element.innerHTML += ( this.imageSize.width / this.imageDimensions.x ) + "px ";
-		this.css.element.innerHTML += ( this.imageSize.height / this.imageDimensions.y ) + "px;\n";
-		this.tileSize.width = (ifWidthIsLonger) ? tileSize : newShorterSide;
-		this.tileSize.height = (!ifWidthIsLonger) ? tileSize : newShorterSide;
+		this.css.element.innerHTML += ( this.tileSize.width * this.imageDimensions.x ) + "px ";
+		this.css.element.innerHTML += ( this.tileSize.height * this.imageDimensions.y ) + "px;\n";
 		this.css.element.innerHTML += "\twidth: " + this.tileSize.width + "px;\n";
 		this.css.element.innerHTML += "\theight: " + this.tileSize.height + "px;\n}\n";
 
