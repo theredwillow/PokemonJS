@@ -36,7 +36,7 @@ function MaleTrainer(type){
 		}
 	};
 
-	this.css = new CSSHandler(this);
+	this.css = generateCSS(this);
 
 	this.draw = function(townIn, r, c) {
 		thisCharacter.element = document.createElement("div");

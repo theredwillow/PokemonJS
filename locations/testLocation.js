@@ -235,7 +235,7 @@ function TestLocation() {
         }
     };
 
-    this.css = new CSSHandler(this);
+    this.css = generateCSS(this);
 
     this.map.coordinates = [
         [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1" ],

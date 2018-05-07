@@ -1,8 +1,8 @@
-var CSSHandler = function(thisSprite) {
+var generateCSS = function(thisSprite) {
 
-    var thisCSS = this;
+    var thisCSS = {};
 
-    this.resizeTiles = function() {
+    thisCSS.resizeTiles = function() {
         if ( thisSprite.tileSize.width != thisSprite.tileSize.height ) {
             var ifWidthIsLonger = ( thisSprite.tileSize.width > thisSprite.tileSize.height );
             var longerSide = ( ifWidthIsLonger ) ? thisSprite.tileSize.width : thisSprite.tileSize.height;
@@ -19,9 +19,9 @@ var CSSHandler = function(thisSprite) {
  
     if ( thisSprite.type == "location" ) {
   
-        this.states = {};
+        thisCSS.states = {};
 
-        this.generateRule = function(tileName) {
+        thisCSS.generateRule = function(tileName) {
             var thisTile = thisSprite.map.tiles[tileName];
             if ( thisTile.backgrounds.length > 1 ) {
                 thisCSS.states[tileName] = thisCSS.states[tileName] || 0;
@@ -42,7 +42,7 @@ var CSSHandler = function(thisSprite) {
             }
         };    
 
-        this.animateBackgrounds = function() {
+        thisCSS.animateBackgrounds = function() {
             thisCSS.animated.innerHTML = "";
             for (var a = 0; a < thisCSS.animatedTileNames.length; a++) {
                 var thisTile = thisCSS.animatedTileNames[a];
@@ -50,15 +50,15 @@ var CSSHandler = function(thisSprite) {
             }
         };
 
-        this.tileNames = Object.keys(thisSprite.map.tiles);
-        this.animatedTileNames = [];
+        thisCSS.tileNames = Object.keys(thisSprite.map.tiles);
+        thisCSS.animatedTileNames = [];
         var addAnimatedTiles = function(t){
             if ( thisSprite.map.tiles[t].backgrounds.length > 1 )
                 thisCSS.animatedTileNames.push(t);
         };
-        this.tileNames.forEach(addAnimatedTiles);
+        thisCSS.tileNames.forEach(addAnimatedTiles);
 
-        this.generateStyles = (function() {
+        thisCSS.generateStyles = function() {
 
             thisCSS.resizeTiles();
 
@@ -109,12 +109,13 @@ var CSSHandler = function(thisSprite) {
             thisCSS.static.innerHTML += ( thisSprite.imageDimensions.y * thisSprite.tileSize.height ) + "px; }\n";
 
             thisCSS.tileNames.forEach(thisCSS.generateRule);
-        })();
+        }
+        thisCSS.generateStyles();
 
     }
     else {
 
-        this.generateStyles = (function() {
+        thisCSS.generateStyles = function() {
 
             thisCSS.resizeTiles();
 
@@ -173,7 +174,11 @@ var CSSHandler = function(thisSprite) {
                 }
             }
 
-        })();
+        };
+        thisCSS.generateStyles();
 
     }
+
+    return thisCSS;
+
 };
