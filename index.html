@@ -3,19 +3,20 @@
     <title>PokemonJS</title>
     <script src="scripts/controls.js"></script>
     <script src="scripts/util.js"></script>
+    <script src="scripts/csshandler.js"></script>
     <script src="locations/TestLocation.js"></script>
     <script src="sprites/MaleTrainer.js"></script>
 </head>
 <body>
 
     <script>
-
+        
         var town = new TestLocation();
         town.map.draw();
 
         var player = new MaleTrainer("player");
         player.name = "Jared";
-        player.draw(town, 1, 1);
+        player.draw(town, 10, 20);
 
         /*
         var test = new MaleTrainer("Test", town);
