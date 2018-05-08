@@ -129,12 +129,12 @@ function MaleTrainer(type){
 			collision = "tile";
 		// Need to add character checker game.sprites
 		
+		thisCharacter.walk.step();
 		if ( !collision || thisCharacter.god ) {
 			thisCharacter.element.style.top = thisCharacter.town.map.rows[r].element.getBoundingClientRect().top;
 			thisCharacter.element.style.left = thisCharacter.town.map.rows[r].cells[c].element.getBoundingClientRect().left;
 			thisCharacter.location.r = r;
 			thisCharacter.location.c = c;
-			thisCharacter.walk.step();
 		}
 		else
 			console.log("Bump! There's a", collision, "in the way!");
