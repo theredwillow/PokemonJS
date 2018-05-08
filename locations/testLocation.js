@@ -275,30 +275,36 @@ function TestLocation() {
         thisLocation.map.element.cellSpacing = "0px";
         thisLocation.map.element.cellPadding = "0px";
         thisLocation.map.element.style.position = "fixed";
-        thisLocation.map.height = thisLocation.map.coordinates.length * tileSize;
-        thisLocation.map.width = thisLocation.map.coordinates[0].length * tileSize;
+        thisLocation.map.height = thisLocation.map.coordinates.length * game.css.tileSize;
+        thisLocation.map.width = thisLocation.map.coordinates[0].length * game.css.tileSize;
         thisLocation.map.rows = {};
         for (var r = 0; r < thisLocation.map.coordinates.length; r++) {
             thisLocation.map.rows[r] = {};
             thisLocation.map.rows[r].element = document.createElement("tr");
             thisLocation.map.rows[r].element.id = "row" + r;
-            thisLocation.map.rows[r].top = r * tileSize;
+            thisLocation.map.rows[r].relativeTop = r * game.css.tileSize;
             thisLocation.map.rows[r].cells = {};
             for (var c = 0; c < thisLocation.map.coordinates[r].length; c++) {
                 thisLocation.map.rows[r].cells[c] = {};
                 thisLocation.map.rows[r].cells[c].element = document.createElement("td");
                 thisLocation.map.drawTile(r,c);
                 thisLocation.map.rows[r].element.appendChild( thisLocation.map.rows[r].cells[c].element );
-                thisLocation.map.rows[r].cells[c].left = c * tileSize;
+                thisLocation.map.rows[r].cells[c].relativeLeft = c * game.css.tileSize;
             }
             thisLocation.map.element.appendChild( thisLocation.map.rows[r].element );
         }
         document.body.appendChild( thisLocation.map.element );
     };
 
-    this.map.move = function(r,c) {
-        town.map.element.style.top = ( window.innerHeight / 2 ) - thisLocation.map.rows[r].top;
-        town.map.element.style.left = ( window.innerWidth / 2 ) - thisLocation.map.rows[r].cells[c].left;
-    };
+    this.map.move = (function(r,c) {
+        if ( typeof r == "object" && thisLocation.player ) {
+            r = thisLocation.player.location.r;
+            c = thisLocation.player.location.c;
+        }
+        thisLocation.map.element.style.top = ( window.innerHeight / 2 ) - thisLocation.map.rows[r].relativeTop;
+        thisLocation.map.element.style.left = ( window.innerWidth / 2 ) - thisLocation.map.rows[r].cells[c].relativeLeft;
+    });
+
+    window.addEventListener('resize', thisLocation.map.move);
     
 }

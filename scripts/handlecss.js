@@ -2,18 +2,20 @@ var generateCSS = function(thisSprite) {
 
     var thisCSS = {};
 
+    game.sprites.push(thisSprite);
+
     thisCSS.resizeTiles = function() {
         if ( thisSprite.tileSize.width != thisSprite.tileSize.height ) {
             var ifWidthIsLonger = ( thisSprite.tileSize.width > thisSprite.tileSize.height );
             var longerSide = ( ifWidthIsLonger ) ? thisSprite.tileSize.width : thisSprite.tileSize.height;
             var shorterSide = ( ifWidthIsLonger ) ? thisSprite.tileSize.height : thisSprite.tileSize.width;
-            var newShorterSide = ( tileSize / longerSide ) * shorterSide;
-            thisSprite.tileSize.width = (ifWidthIsLonger) ? tileSize : newShorterSide;
-            thisSprite.tileSize.height = (!ifWidthIsLonger) ? tileSize : newShorterSide;
+            var newShorterSide = ( game.css.tileSize / longerSide ) * shorterSide;
+            thisSprite.tileSize.width = (ifWidthIsLonger) ? game.css.tileSize : newShorterSide;
+            thisSprite.tileSize.height = (!ifWidthIsLonger) ? game.css.tileSize : newShorterSide;
         }
         else {
-            thisSprite.tileSize.width = tileSize;
-            thisSprite.tileSize.height =  tileSize;
+            thisSprite.tileSize.width = game.css.tileSize;
+            thisSprite.tileSize.height =  game.css.tileSize;
         }
     };
  
@@ -98,8 +100,8 @@ var generateCSS = function(thisSprite) {
                     thisCSS.animated = animatedStyle;
                 }
 
-                if ( !loop.listeners[ thisSprite.id + "Animation" ] ) {
-                    loop.listeners[ thisSprite.id + "Animation" ] = document.addEventListener("loopChanged", thisCSS.animateBackgrounds);
+                if ( !game.loop.listeners[ thisSprite.id + "Animation" ] ) {
+                    game.loop.listeners[ thisSprite.id + "Animation" ] = document.addEventListener("loopChanged", thisCSS.animateBackgrounds);
                 }
             }
 
@@ -124,30 +126,31 @@ var generateCSS = function(thisSprite) {
                 thisCSS.image = document.createElement("style");
                 thisCSS.image.type = "text/css";
                 thisCSS.image.id = thisSprite.id + "-imageStyle";
-                thisCSS.image.innerHTML += "." + thisSprite.id + " {";
-                thisCSS.image.innerHTML += "\tposition: absolute;\n";
-                thisCSS.image.innerHTML += "\tbackground-image: url('sprites/" + thisSprite.image + "');\n";
-                thisCSS.image.innerHTML += "\tbackground-size: ";
-		        thisCSS.image.innerHTML += ( thisSprite.tileSize.width * thisSprite.imageDimensions.x ) + "px ";
-		        thisCSS.image.innerHTML += ( thisSprite.tileSize.height * thisSprite.imageDimensions.y ) + "px;\n";
-		        thisCSS.image.innerHTML += "\twidth: " + thisSprite.tileSize.width + "px;\n";
-		        thisCSS.image.innerHTML += "\theight: " + thisSprite.tileSize.height + "px;\n}\n";
                 document.head.appendChild(thisCSS.image);
             }
             else if ( !thisCSS.image ) {
                 thisCSS.image = imageStyle;
             }
 
+            thisCSS.image.innerHTML = "." + thisSprite.id + " {";
+            thisCSS.image.innerHTML += "\tposition: absolute;\n";
+            thisCSS.image.innerHTML += "\tbackground-image: url('sprites/" + thisSprite.image + "');\n";
+            thisCSS.image.innerHTML += "\tbackground-size: ";
+            thisCSS.image.innerHTML += ( thisSprite.tileSize.width * thisSprite.imageDimensions.x ) + "px ";
+            thisCSS.image.innerHTML += ( thisSprite.tileSize.height * thisSprite.imageDimensions.y ) + "px;\n";
+            thisCSS.image.innerHTML += "\twidth: " + thisSprite.tileSize.width + "px;\n";
+            thisCSS.image.innerHTML += "\theight: " + thisSprite.tileSize.height + "px;\n}\n";
+
             for (var i = 0; i < 4; i++) {
                 var dir = directions[i];
                 for (var j = 0; j < 3; j++) {
-                    var stance = stances[j];
-                    thisCSS.image.innerHTML += ".male-trainer." + dir + "." + stance;
-                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stance].flip ) ? "\n{\n\t" : " { ";
+                    var stride = strides[j];
+                    thisCSS.image.innerHTML += ".male-trainer." + dir + "." + stride;
+                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].flip ) ? "\n{\n\t" : " { ";
                     thisCSS.image.innerHTML += "background-position: ";
-                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stance].x * -1 * thisSprite.tileSize.width ) + "px ";
-                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stance].y * -1 * thisSprite.tileSize.height ) + "px;";
-                    if ( thisSprite.tiles[dir][stance].flip ) {
+                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].x * -1 * thisSprite.tileSize.width ) + "px ";
+                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].y * -1 * thisSprite.tileSize.height ) + "px;";
+                    if ( thisSprite.tiles[dir][stride].flip ) {
                         if ( dir == "east" || dir == "west" ) {
                             thisCSS.image.innerHTML += `
                             -moz-transform: scaleX(-1);

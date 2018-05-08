@@ -37,14 +37,9 @@ function dispatchKeyDown(e) {
 	if ( buttonPressed ) {
 		if ( buttonPressed == "speed" )
 			spedUp = true;
-		else if ( iC == 0 ) {
+		else {
 			document.dispatchEvent( keydownEvents[buttonPressed] );
-			iC++;
 		}
-		else if ( iC < eventInterval )
-			iC++;
-		else
-			iC = 0;
 	}
 }
 
@@ -52,16 +47,13 @@ function dispatchKeyUp(e) {
 	var buttonReleased = controls[e.which];
 	if ( buttonReleased ) {
 		if ( buttonReleased == "speed" )
-			speedUp = false;
+			spedUp = false;
 		else {
-			iC = 0;
 			document.dispatchEvent( keyupEvents[buttonReleased] );
 		}
 	}
 }
 
 var spedUp = false;
-var eventInterval = 2;
-var iC = 0; // interval counter
 var keyDownHandler = document.addEventListener("keydown", dispatchKeyDown);
 var keyUpHandler = document.addEventListener("keyup", dispatchKeyUp);

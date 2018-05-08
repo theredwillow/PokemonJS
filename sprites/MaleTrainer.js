@@ -5,6 +5,7 @@ function MaleTrainer(type){
 	this.type = type || "character";
 	this.name = name || "Red";
 	this.gender = "male";
+	this.location = { r: 0, c: 0 };
 
 	this.id = "male-trainer";
 
@@ -39,6 +40,12 @@ function MaleTrainer(type){
 	this.css = generateCSS(this);
 
 	this.draw = function(townIn, r, c) {
+		if ( thisCharacter.type == "player" )
+			townIn.player = thisCharacter;
+		thisCharacter.town = townIn;
+
+		thisCharacter.location = { r, c };
+
 		thisCharacter.element = document.createElement("div");
 		thisCharacter.element.id = this.name;
 		if ( !thisCharacter.facing )
@@ -46,9 +53,9 @@ function MaleTrainer(type){
 		thisCharacter.element.className = "male-trainer";
 		thisCharacter.element.className += " " + thisCharacter.type;
 		thisCharacter.element.className += " " + thisCharacter.facing;
-		thisCharacter.element.className += " " + thisCharacter.stance;
-		thisCharacter.element.style.top = townIn.map.rows[r].top + ( tileSize / 2 );
-		thisCharacter.element.style.left = townIn.map.rows[r].cells[c].left + ( tileSize / 2 );
+		thisCharacter.element.className += " " + thisCharacter.stride;
+		thisCharacter.element.style.top = townIn.map.rows[r].relativeTop + ( game.css.tileSize / 2 );
+		thisCharacter.element.style.left = townIn.map.rows[r].cells[c].relativeLeft + ( game.css.tileSize / 2 );
 		document.body.appendChild( thisCharacter.element );
 
 		if ( thisCharacter.type == "character" )
@@ -61,7 +68,7 @@ function MaleTrainer(type){
 		thisCharacter.element.className += " " + direction;
 	};
 
-	this.stance = "standing";
+	this.stride = "standing";
 	/*
 	this.foot = "right";
 	this.step = function() {
@@ -80,49 +87,63 @@ function MaleTrainer(type){
 	this.stop = function() { setTimeout(thisCharacter.stand, 100); };
 	*/
 
-	this.moveTo = function(x, y, special) {
-		var currentX = Number(thisCharacter.element.style.left.replace("px","")) || 0;
-		var currentY = Number(thisCharacter.element.style.top.replace("px","")) || 0;
-		var currentWidth = Number(thisCharacter.tileSize.width);
-		var currentHeight = Number(thisCharacter.tileSize.height);
+	this.moveTo = function(r,c) {
 
-		x = x || currentX;
-		y = y || currentY;
+		// Need to add spedUp functionality
 
-		if ( x == "-" )
-			x = currentX + currentWidth;
-		else if ( x == "+" )
-			x = currentX - currentWidth;
+		r = r || thisCharacter.location.r;
+		c = c || thisCharacter.location.c;
 
-		if ( y == "-" )
-			y = currentY + currentHeight;
-		else if ( y == "+" )
-			y = currentY - currentHeight;
-		
-		// if ( !special )
-		//	thisCharacter.step();
-		if ( !detectCollision(thisCharacter, x, y) || thisCharacter.god ) {
-			thisCharacter.element.style.left = x + "px";
-			thisCharacter.element.style.top = y + "px";
+		if ( r[0] == "-" ) {
+			r = Number( r.substr(1) );
+			r = thisCharacter.location.r - r;
 		}
-		//else
-		//	thisCharacter.stop();
+		else if ( r[0] == "+" ) {
+			r = Number( r.substr(1) );
+			r += thisCharacter.location.r;
+		}
+
+		if ( c[0] == "-" ) {
+			c = Number( c.substr(1) );
+			c = thisCharacter.location.c - c;
+		}
+		else if ( c[0] == "+" ){
+			c = Number( c.substr(1) );
+			c += thisCharacter.location.c;
+		}
+
+		var collision = false;
+		if ( !thisCharacter.town.map.rows[r] || !thisCharacter.town.map.rows[r].cells[c] )
+			collision = "border";
+		else if ( !thisCharacter.town.map.rows[r].cells[c].walk )
+			collision = "tile";
+		// Need to add character checker game.sprites
+		
+		if ( !collision || thisCharacter.god ) {
+			thisCharacter.element.style.top = thisCharacter.town.map.rows[r].element.getBoundingClientRect().top;
+			thisCharacter.element.style.left = thisCharacter.town.map.rows[r].cells[c].element.getBoundingClientRect().left;
+			thisCharacter.location.r = r;
+			thisCharacter.location.c = c;
+		}
+		else
+			console.log("Bump! There's a", collision, "in the way!");
+
 	};
 	this.moveNorth = function() {
 		thisCharacter.face("north");
-		thisCharacter.moveTo(null,"+");
+		thisCharacter.moveTo("-1", null);
 	};
 	this.moveSouth = function() {
 		thisCharacter.face("south");
-		thisCharacter.moveTo(null,"-");
+		thisCharacter.moveTo("+1", null);
 	};
 	this.moveEast = function() {
 		thisCharacter.face("east");
-		thisCharacter.moveTo("-", null);
+		thisCharacter.moveTo(null, "+1");
 	};
 	this.moveWest = function() {
 		thisCharacter.face("west");
-		thisCharacter.moveTo("+",null);
+		thisCharacter.moveTo(null,"-1");
 	};
 
 	if (this.type == "character") {
