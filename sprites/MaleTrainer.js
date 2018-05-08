@@ -48,12 +48,10 @@ function MaleTrainer(type){
 
 		thisCharacter.element = document.createElement("div");
 		thisCharacter.element.id = this.name;
-		if ( !thisCharacter.facing )
-			this.face("south");
 		thisCharacter.element.className = "male-trainer";
 		thisCharacter.element.className += " " + thisCharacter.type;
-		thisCharacter.element.className += " " + thisCharacter.facing;
-		thisCharacter.element.className += " " + thisCharacter.stride;
+		thisCharacter.walk.facing = thisCharacter.walk.facing || "south";
+		thisCharacter.walk.stride = thisCharacter.walk.stride || "standing";
 		thisCharacter.element.style.top = townIn.map.rows[r].relativeTop + ( game.css.tileSize / 2 );
 		thisCharacter.element.style.left = townIn.map.rows[r].cells[c].relativeLeft + ( game.css.tileSize / 2 );
 		document.body.appendChild( thisCharacter.element );
@@ -62,30 +60,42 @@ function MaleTrainer(type){
 			this.element.addEventListener("talk", thisCharacter.onTalk, false);
 	};
 
-	this.face = function(direction) {
-		thisCharacter.facing = direction;
-		thisCharacter.element.className = deleteDirection(thisCharacter.element.className);
-		thisCharacter.element.className += " " + direction;
-	};
+	this.walk = {
 
-	this.stride = "standing";
-	/*
-	this.foot = "right";
-	this.step = function() {
-		if ( thisCharacter.stride == "standing" ) {
-			thisCharacter.stride = thisCharacter.foot + "Foot";
-			thisCharacter.foot = ( thisCharacter.foot == "right" ) ? "left" : "right";
-		}
-		else
-			thisCharacter.stride = "standing";
-		thisCharacter.element.style.background = thisCharacter.tile[thisCharacter.facing][thisCharacter.stride];
+		foot: "right",
+
+		set facing(pos) {
+			this._facing = pos;
+			thisCharacter.element.className = thisCharacter.element.className.replace(/\s?((north)|(south)|(east)|(west))/gi, "");;
+			thisCharacter.element.className += " " + this._facing;
+		},
+		get facing() {
+			return this._facing;
+		},
+
+		set stride(pos) {
+			this._stride = pos;
+			thisCharacter.element.className = thisCharacter.element.className.replace(/\s?((standing)|((left|right)Foot))/gi, "");
+			thisCharacter.element.className += " " + this._stride;
+		},
+		get stride() {
+			return this._stride;
+		},
+
+		step: function() {
+			if ( this.stride == "standing" ) {
+				this.stride = this.foot + "Foot";
+				this.foot = ( this.foot == "right" ) ? "left" : "right";
+			}
+			else
+				this.stride = "standing";
+		},
+
+		stand: function() { thisCharacter.walk.stride = "standing"; },
+
+		stop: function() { setTimeout(thisCharacter.walk.stand, 100); }
+
 	};
-	this.stand = function() {
-		thisCharacter.stride = "standing";
-		thisCharacter.element.style.background = thisCharacter.tile[thisCharacter.facing].standing;
-	};
-	this.stop = function() { setTimeout(thisCharacter.stand, 100); };
-	*/
 
 	this.moveTo = function(r,c) {
 
@@ -124,25 +134,26 @@ function MaleTrainer(type){
 			thisCharacter.element.style.left = thisCharacter.town.map.rows[r].cells[c].element.getBoundingClientRect().left;
 			thisCharacter.location.r = r;
 			thisCharacter.location.c = c;
+			thisCharacter.walk.step();
 		}
 		else
 			console.log("Bump! There's a", collision, "in the way!");
 
 	};
 	this.moveNorth = function() {
-		thisCharacter.face("north");
+		thisCharacter.walk.facing = "north";
 		thisCharacter.moveTo("-1", null);
 	};
 	this.moveSouth = function() {
-		thisCharacter.face("south");
+		thisCharacter.walk.facing = "south";
 		thisCharacter.moveTo("+1", null);
 	};
 	this.moveEast = function() {
-		thisCharacter.face("east");
+		thisCharacter.walk.facing = "east";
 		thisCharacter.moveTo(null, "+1");
 	};
 	this.moveWest = function() {
-		thisCharacter.face("west");
+		thisCharacter.walk.facing = "west";
 		thisCharacter.moveTo(null,"-1");
 	};
 
@@ -172,7 +183,7 @@ function MaleTrainer(type){
 			    	thisCharacter.moveWest();
 			    	break;
 			}
-			//thisCharacter.stop();
+			thisCharacter.walk.stop();
 
 			if ( thisCharacter.p < 7 )
 				thisCharacter.p++;
@@ -189,12 +200,10 @@ function MaleTrainer(type){
 		document.addEventListener("pushRight", this.moveEast);
 		document.addEventListener("pushLeft", this.moveWest);
 
-		/*
-		document.addEventListener("releaseUp", this.stop);
-		document.addEventListener("releaseDown", this.stop);
-		document.addEventListener("releaseRight", this.stop);
-		document.addEventListener("releaseLeft", this.stop);
-		*/
+		document.addEventListener("releaseUp", this.walk.stop);
+		document.addEventListener("releaseDown", this.walk.stop);
+		document.addEventListener("releaseRight", this.walk.stop);
+		document.addEventListener("releaseLeft", this.walk.stop);
 
 	}
 

@@ -74,6 +74,3 @@ function detectCollision( sprite, x, y ) {
 var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 var directions = ["north", "south", "east", "west"];
 var strides = ["standing", "leftFoot", "rightFoot"];
-
-var deleteDirection = function(str) { return str.replace(/\s?((north)|(south)|(east)|(west))/gi, ""); };
-var deletestride = function(str) { return str.replace(/\s?((standing)|((left|right)Foot))/gi, ""); };
