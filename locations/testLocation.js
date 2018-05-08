@@ -297,9 +297,9 @@ function TestLocation() {
     };
 
     this.map.move = (function(r,c) {
-        if ( typeof r == "object" && thisLocation.player ) {
-            r = thisLocation.player.location.r;
-            c = thisLocation.player.location.c;
+        if ( typeof r == "undefined" && thisLocation.player ) {
+            r = thisLocation.player.walk.location.r;
+            c = thisLocation.player.walk.location.c;
         }
         thisLocation.map.element.style.top = ( window.innerHeight / 2 ) - thisLocation.map.rows[r].relativeTop;
         thisLocation.map.element.style.left = ( window.innerWidth / 2 ) - thisLocation.map.rows[r].cells[c].relativeLeft;

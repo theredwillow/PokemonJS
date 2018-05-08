@@ -40,12 +40,6 @@ function MaleTrainer(type){
 	this.css = generateCSS(this);
 
 	this.draw = function(townIn, r, c) {
-		if ( thisCharacter.type == "player" )
-			townIn.player = thisCharacter;
-		thisCharacter.town = townIn;
-
-		thisCharacter.location = { r, c };
-
 		thisCharacter.element = document.createElement("div");
 		thisCharacter.element.id = this.name;
 		thisCharacter.element.className = "male-trainer";
@@ -56,13 +50,28 @@ function MaleTrainer(type){
 		thisCharacter.element.style.left = townIn.map.rows[r].cells[c].relativeLeft + ( game.css.tileSize / 2 );
 		document.body.appendChild( thisCharacter.element );
 
-		if ( thisCharacter.type == "character" )
-			this.element.addEventListener("talk", thisCharacter.onTalk, false);
+		if ( thisCharacter.type == "player" )
+			townIn.player = thisCharacter;
+		thisCharacter.town = townIn;
+
+		this.element.addEventListener("talk", thisCharacter.onTalk, false);
+		
+		thisCharacter.walk.location = { r, c };
 	};
 
 	this.walk = {
 
 		foot: "right",
+
+		set location(pos) {
+			this._location = { r: pos.r, c: pos.c };
+			thisCharacter.town.map.move();
+			thisCharacter.element.style.top = thisCharacter.town.map.rows[pos.r].element.getBoundingClientRect().top;
+			thisCharacter.element.style.left = thisCharacter.town.map.rows[pos.r].cells[pos.c].element.getBoundingClientRect().left;
+		},
+		get location() {
+			return this._location;
+		},
 
 		set facing(pos) {
 			this._facing = pos;
@@ -101,25 +110,25 @@ function MaleTrainer(type){
 
 		// Need to add spedUp functionality
 
-		r = r || thisCharacter.location.r;
-		c = c || thisCharacter.location.c;
+		r = r || thisCharacter.walk.location.r;
+		c = c || thisCharacter.walk.location.c;
 
 		if ( r[0] == "-" ) {
 			r = Number( r.substr(1) );
-			r = thisCharacter.location.r - r;
+			r = thisCharacter.walk.location.r - r;
 		}
 		else if ( r[0] == "+" ) {
 			r = Number( r.substr(1) );
-			r += thisCharacter.location.r;
+			r += thisCharacter.walk.location.r;
 		}
 
 		if ( c[0] == "-" ) {
 			c = Number( c.substr(1) );
-			c = thisCharacter.location.c - c;
+			c = thisCharacter.walk.location.c - c;
 		}
 		else if ( c[0] == "+" ){
 			c = Number( c.substr(1) );
-			c += thisCharacter.location.c;
+			c += thisCharacter.walk.location.c;
 		}
 
 		var collision = false;
@@ -131,10 +140,7 @@ function MaleTrainer(type){
 		
 		thisCharacter.walk.step();
 		if ( !collision || thisCharacter.god ) {
-			thisCharacter.element.style.top = thisCharacter.town.map.rows[r].element.getBoundingClientRect().top;
-			thisCharacter.element.style.left = thisCharacter.town.map.rows[r].cells[c].element.getBoundingClientRect().left;
-			thisCharacter.location.r = r;
-			thisCharacter.location.c = c;
+			thisCharacter.walk.location = { r, c };
 		}
 		else
 			console.log("Bump! There's a", collision, "in the way!");
