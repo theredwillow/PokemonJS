@@ -64,10 +64,22 @@ function MaleTrainer(type){
 		foot: "right",
 
 		set location(pos) {
-			this._location = { r: pos.r, c: pos.c };
-			thisCharacter.town.map.move();
-			thisCharacter.element.style.top = thisCharacter.town.map.rows[pos.r].element.getBoundingClientRect().top;
-			thisCharacter.element.style.left = thisCharacter.town.map.rows[pos.r].cells[pos.c].element.getBoundingClientRect().left;
+			var collision = false;
+			var newRow = thisCharacter.town.map.rows[pos.r];
+			if ( !newRow || !newRow.cells[pos.c] ) {
+				collision = "border";
+			}
+			else if ( !newRow.cells[pos.c].walk )
+				collision = "tile";
+			// Need to add character checker game.sprites
+			if ( !collision || thisCharacter.god ) {
+				this._location = { r: pos.r, c: pos.c };
+				thisCharacter.town.map.move();
+				thisCharacter.element.style.top = newRow.element.getBoundingClientRect().top;
+				thisCharacter.element.style.left = newRow.cells[pos.c].element.getBoundingClientRect().left;
+			}
+			else
+				console.log("Bump! There's a", collision, "in the way!");
 		},
 		get location() {
 			return this._location;
@@ -121,6 +133,9 @@ function MaleTrainer(type){
 			r = Number( r.substr(1) );
 			r += thisCharacter.walk.location.r;
 		}
+		else {
+			thisCharacter.facing = "south";
+		}
 
 		if ( c[0] == "-" ) {
 			c = Number( c.substr(1) );
@@ -130,36 +145,31 @@ function MaleTrainer(type){
 			c = Number( c.substr(1) );
 			c += thisCharacter.walk.location.c;
 		}
-
-		var collision = false;
-		if ( !thisCharacter.town.map.rows[r] || !thisCharacter.town.map.rows[r].cells[c] )
-			collision = "border";
-		else if ( !thisCharacter.town.map.rows[r].cells[c].walk )
-			collision = "tile";
-		// Need to add character checker game.sprites
-		
-		thisCharacter.walk.step();
-		if ( !collision || thisCharacter.god ) {
-			thisCharacter.walk.location = { r, c };
+		else {
+			thisCharacter.facing = "south";
 		}
-		else
-			console.log("Bump! There's a", collision, "in the way!");
+		
+		thisCharacter.walk.location = { r, c };
 
 	};
 	this.moveNorth = function() {
 		thisCharacter.walk.facing = "north";
+		thisCharacter.walk.step();
 		thisCharacter.moveTo("-1", null);
 	};
 	this.moveSouth = function() {
 		thisCharacter.walk.facing = "south";
+		thisCharacter.walk.step();
 		thisCharacter.moveTo("+1", null);
 	};
 	this.moveEast = function() {
 		thisCharacter.walk.facing = "east";
+		thisCharacter.walk.step();
 		thisCharacter.moveTo(null, "+1");
 	};
 	this.moveWest = function() {
 		thisCharacter.walk.facing = "west";
+		thisCharacter.walk.step();
 		thisCharacter.moveTo(null,"-1");
 	};
 
