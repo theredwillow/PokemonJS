@@ -12,9 +12,7 @@ function TestLocation() {
 	this.imageSize = { width: 64, height: 176 };
 	this.tileSize = { width: 16, height: 16 };
 
-    this.map = {};
-
-    this.map.tiles = {
+    this.tileRules = {
         "a0": {
             "backgrounds": [
                 { "x": "0", "y": "0" }
@@ -235,9 +233,7 @@ function TestLocation() {
         }
     };
 
-    this.css = generateCSS(this);
-
-    this.map.coordinates = [
+    this.defaultMap = [
         [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1" ],
         [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "b0", "a1" ],
         [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "a3", "a1" ],
@@ -256,55 +252,8 @@ function TestLocation() {
         [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a0", "a1" ],
         [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "b1", "b1", "b1" ]
     ];
-
-    this.map.drawTile = function(r,c,t){
-        if (t)
-            thisLocation.map.coordinates[r][c] = t;
-        var thisCell = thisLocation.map.coordinates[r][c];
-        thisLocation.map.rows[r].cells[c].element.id = "row" + r + "-cell" + c;
-        thisLocation.map.rows[r].cells[c].element.className = "tile";
-        if ( thisCell != "--" ) {
-            thisLocation.map.rows[r].cells[c].element.className += " " + thisLocation.id + " " + thisCell;
-            thisLocation.map.rows[r].cells[c].walk = thisLocation.map.tiles[thisCell].walk;
-            thisLocation.map.rows[r].cells[c].surf = thisLocation.map.tiles[thisCell].surf;
-        }
-    };
     
-    this.map.draw = function() {
-        thisLocation.map.element = document.createElement("table");
-        thisLocation.map.element.cellSpacing = "0px";
-        thisLocation.map.element.cellPadding = "0px";
-        thisLocation.map.element.style.position = "fixed";
-        thisLocation.map.height = thisLocation.map.coordinates.length * game.css.tileSize;
-        thisLocation.map.width = thisLocation.map.coordinates[0].length * game.css.tileSize;
-        thisLocation.map.rows = {};
-        for (var r = 0; r < thisLocation.map.coordinates.length; r++) {
-            thisLocation.map.rows[r] = {};
-            thisLocation.map.rows[r].element = document.createElement("tr");
-            thisLocation.map.rows[r].element.id = "row" + r;
-            thisLocation.map.rows[r].relativeTop = r * game.css.tileSize;
-            thisLocation.map.rows[r].cells = {};
-            for (var c = 0; c < thisLocation.map.coordinates[r].length; c++) {
-                thisLocation.map.rows[r].cells[c] = {};
-                thisLocation.map.rows[r].cells[c].element = document.createElement("td");
-                thisLocation.map.drawTile(r,c);
-                thisLocation.map.rows[r].element.appendChild( thisLocation.map.rows[r].cells[c].element );
-                thisLocation.map.rows[r].cells[c].relativeLeft = c * game.css.tileSize;
-            }
-            thisLocation.map.element.appendChild( thisLocation.map.rows[r].element );
-        }
-        document.body.appendChild( thisLocation.map.element );
-    };
-
-    this.map.move = (function(r,c) {
-        if ( typeof r == "undefined" && thisLocation.player ) {
-            r = thisLocation.player.walk.location.r;
-            c = thisLocation.player.walk.location.c;
-        }
-        thisLocation.map.element.style.top = ( window.innerHeight / 2 ) - thisLocation.map.rows[r].relativeTop;
-        thisLocation.map.element.style.left = ( window.innerWidth / 2 ) - thisLocation.map.rows[r].cells[c].relativeLeft;
-    });
-
-    window.addEventListener('resize', thisLocation.map.move);
+    this.map = generateMap(this);
+    this.css = generateCSS(this);
     
 }
