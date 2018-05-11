@@ -41,7 +41,7 @@ var loadNextStep = function(){
         else
             loadNextStep();
     };
-    script.src = "lB-steps/step" + s + ".js";
+    script.src = "step" + s + ".js";
     document.head.appendChild(script);
 };
 loadNextStep();

@@ -4,7 +4,7 @@ steps[0] = function() {
     
     var updateImage = function() {
         var fileSrc = "locations/" + fileUpload.value.replace("C:\\fakepath\\", "");
-        img.src = "../" + fileSrc;
+        img.src = "../../" + fileSrc;
         newLocation.image = img.src;
     };
 
