@@ -46,9 +46,6 @@ function MaleTrainer(type){
 		thisCharacter.element.className += " " + thisCharacter.type;
 		thisCharacter.walk.facing = thisCharacter.walk.facing || "south";
 		thisCharacter.walk.stride = thisCharacter.walk.stride || "standing";
-		thisCharacter.element.style.top = townIn.map.rows[r].relativeTop + ( game.css.tileSize / 2 );
-		thisCharacter.element.style.left = townIn.map.rows[r].cells[c].relativeLeft + ( game.css.tileSize / 2 );
-		document.body.appendChild( thisCharacter.element );
 
 		if ( thisCharacter.type == "player" )
 			townIn.player = thisCharacter;
@@ -75,8 +72,7 @@ function MaleTrainer(type){
 			if ( !collision || thisCharacter.god ) {
 				this._location = { r: pos.r, c: pos.c };
 				thisCharacter.town.map.move();
-				thisCharacter.element.style.top = newRow.element.getBoundingClientRect().top;
-				thisCharacter.element.style.left = newRow.cells[pos.c].element.getBoundingClientRect().left;
+				newRow.cells[pos.c].element.appendChild(thisCharacter.element);
 			}
 			else
 				console.log("Bump! There's a", collision, "in the way!");

@@ -1,13 +1,14 @@
 <html>
 <head>
     <title>PokemonJS</title>
+</head>
+<body>
+
     <script src="scripts/controls.js"></script>
     <script src="scripts/util.js"></script>
     <script src="scripts/handlecss.js"></script>
     <script src="locations/TestLocation.js"></script>
     <script src="sprites/MaleTrainer.js"></script>
-</head>
-<body>
 
     <script>
         
@@ -18,10 +19,9 @@
         player.name = "Jared";
         player.draw(town, 10, 20);
 
-        /*
-        var test = new MaleTrainer("Test", town);
-        test.moveTo(100, 100, "init");
-        */
+        var test = new MaleTrainer();
+        test.name = "Bob";
+        test.draw(town, 5, 10);
 
     </script>
 

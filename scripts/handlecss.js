@@ -133,7 +133,6 @@ var generateCSS = function(thisSprite) {
             }
 
             thisCSS.image.innerHTML = "." + thisSprite.id + " {";
-            thisCSS.image.innerHTML += "\tposition: absolute;\n";
             thisCSS.image.innerHTML += "\tbackground-image: url('sprites/" + thisSprite.image + "');\n";
             thisCSS.image.innerHTML += "\tbackground-size: ";
             thisCSS.image.innerHTML += ( thisSprite.tileSize.width * thisSprite.imageDimensions.x ) + "px ";
