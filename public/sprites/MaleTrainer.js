@@ -68,7 +68,8 @@ function MaleTrainer(type){
 			}
 			else if ( !newRow.cells[pos.c].walk )
 				collision = "tile";
-			// Need to add character checker game.sprites
+			else if ( newRow.cells[pos.c].element.innerHTML )
+				collision = "character";
 			if ( !collision || thisCharacter.god ) {
 				this._location = { r: pos.r, c: pos.c };
 				thisCharacter.town.map.move();
