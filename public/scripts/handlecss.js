@@ -4,7 +4,7 @@ var generateCSS = function(thisSprite) {
 
     game.sprites.push(thisSprite);
 
-    thisCSS.resizeTiles = function() {
+    var resizeTiles = function() {
         if ( thisSprite.tileSize.width != thisSprite.tileSize.height ) {
             var ifWidthIsLonger = ( thisSprite.tileSize.width > thisSprite.tileSize.height );
             var longerSide = ( ifWidthIsLonger ) ? thisSprite.tileSize.width : thisSprite.tileSize.height;
@@ -24,25 +24,25 @@ var generateCSS = function(thisSprite) {
         thisCSS.states = {};
 
         thisCSS.generateRule = function(tileName) {
-            var thisTile = thisSprite.map.tiles[tileName];
-            if ( thisTile.backgrounds.length > 1 ) {
+            var theseBackgrounds = thisSprite.map.backgrounds[tileName];
+            if ( theseBackgrounds.length > 1 ) {
                 thisCSS.states[tileName] = thisCSS.states[tileName] || 0;
-                var thisTilesCoor = thisTile.backgrounds[ thisCSS.states[tileName]++ ];
+                var thisTilesCoor = theseBackgrounds[ thisCSS.states[tileName]++ ];
                 thisCSS.animated.innerHTML += "." + thisSprite.id + "." + tileName;
                 thisCSS.animated.innerHTML += " { background-position: ";
                 thisCSS.animated.innerHTML += (thisTilesCoor.x * -1 * thisSprite.tileSize.width) + "px ";
                 thisCSS.animated.innerHTML += (thisTilesCoor.y * -1 * thisSprite.tileSize.height) + "px }\n";
-                if ( thisCSS.states[tileName] >= thisTile.backgrounds.length )
+                if ( thisCSS.states[tileName] >= theseBackgrounds.length )
                     delete thisCSS.states[tileName];
             }
             else {
-                var thisTilesCoor = thisTile.backgrounds[0];
+                var thisTilesCoor = theseBackgrounds[0];
                 thisCSS.static.innerHTML += "." + thisSprite.id + "." + tileName;
                 thisCSS.static.innerHTML += " { background-position: ";
                 thisCSS.static.innerHTML += (thisTilesCoor.x * -1 * thisSprite.tileSize.width) + "px ";
                 thisCSS.static.innerHTML += (thisTilesCoor.y * -1 * thisSprite.tileSize.height) + "px }\n";
             }
-        };    
+        };
 
         thisCSS.animateBackgrounds = function() {
             thisCSS.animated.innerHTML = "";
@@ -52,17 +52,17 @@ var generateCSS = function(thisSprite) {
             }
         };
 
-        thisCSS.tileNames = Object.keys(thisSprite.map.tiles);
+        thisCSS.tileNames = Object.keys(thisSprite.map.backgrounds);
         thisCSS.animatedTileNames = [];
         var addAnimatedTiles = function(t){
-            if ( thisSprite.map.tiles[t].backgrounds.length > 1 )
+            if ( thisSprite.map.backgrounds[t].length > 1 )
                 thisCSS.animatedTileNames.push(t);
         };
         thisCSS.tileNames.forEach(addAnimatedTiles);
 
         thisCSS.generateStyles = function() {
 
-            thisCSS.resizeTiles();
+            resizeTiles();
 
             var imageStyle = document.getElementById(thisSprite.id + "-imageStyle");
             if ( !imageStyle ) {
@@ -119,7 +119,7 @@ var generateCSS = function(thisSprite) {
 
         thisCSS.generateStyles = function() {
 
-            thisCSS.resizeTiles();
+            resizeTiles();
 
             var imageStyle = document.getElementById(thisSprite.id + "-imageStyle");
             if ( !imageStyle ) {

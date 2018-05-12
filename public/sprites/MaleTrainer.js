@@ -63,6 +63,7 @@ function MaleTrainer(type){
 		set location(pos) {
 			var collision = false;
 			var newRow = thisCharacter.town.map.rows[pos.r];
+			// Dev Idea: New system will have to be able to handle portals without tiles
 			if ( !newRow || !newRow.cells[pos.c] ) {
 				collision = "border";
 			}
