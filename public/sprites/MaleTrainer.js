@@ -63,14 +63,22 @@ function MaleTrainer(type){
 		set location(pos) {
 			var collision = false;
 			var newRow = thisCharacter.town.map.rows[pos.r];
-			// Dev Idea: New system will have to be able to handle portals without tiles
-			if ( !newRow || !newRow.cells[pos.c] ) {
-				collision = "border";
+
+			if ( newRow && newRow.cells && newRow.cells[pos.c] ) {
+				if ( newRow.cells[pos.c].element ) {
+					if ( newRow.cells[pos.c].element.innerHTML )	
+						collision = "character";
+					else if ( newRow.cells[pos.c].portal )
+						collision = "building (portal: " + JSON.stringify( newRow.cells[pos.c].portal ) + ")";
+					else if ( !newRow.cells[pos.c].walk )	
+						collision = "nonwalkable tile";
+				}
+				else if ( newRow.cells[pos.c].portal )	
+					collision = "route (portal: " + JSON.stringify( newRow.cells[pos.c].portal ) + ")";
 			}
-			else if ( !newRow.cells[pos.c].walk )
-				collision = "tile";
-			else if ( newRow.cells[pos.c].element.innerHTML )
-				collision = "character";
+			else	
+				collision = "border";
+			
 			if ( !collision || thisCharacter.god ) {
 				this._location = { r: pos.r, c: pos.c };
 				thisCharacter.town.map.move();

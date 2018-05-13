@@ -48,18 +48,19 @@ var generateMap = function(thisLocation) {
         get: function() { return thisMap._portals; },
         set: function(value) {
             thisMap._portals = value || [ ];
-            loopThru( null, setPortal );
+            loopThru( null, setPortal, "portals" );
         }
     });
 
     var loopThru = function(inRow, inCell, otherInfo) {
         thisMap.rows = thisMap.rows || {};
-        for (var r = 0; r < thisMap.coordinates.length; r++) {
+        var arrayToLoopThru = ( otherInfo == "portals" ) ? thisMap.portals.coordinates : thisMap.coordinates;
+        for (var r = 0; r < arrayToLoopThru.length; r++) {
             thisMap.rows[r] = thisMap.rows[r] || {};
             thisMap.rows[r].cells = thisMap.rows[r].cells || {};
             if (inRow)
                 inRow(r, otherInfo);
-            for (var c = 0; c < thisMap.coordinates[r].length; c++) {
+            for (var c = 0; c < arrayToLoopThru[r].length; c++) {
                 thisMap.rows[r].cells[c] = thisMap.rows[r].cells[c] || {};
                 if (inCell)
                     inCell(r, c, otherInfo);
@@ -126,20 +127,19 @@ var generateMap = function(thisLocation) {
         }
     };
 
-    thisMap.build = function() {
-        thisMap.coordinates = thisMap.coordinates || thisMap.defaults.coordinates;
+    thisMap.coordinates = thisMap.coordinates || thisMap.defaults.coordinates;
+    thisMap.walk = thisMap.walk || thisMap.defaults.walk;
+    thisMap.surf = thisMap.surf || thisMap.defaults.surf;
+    thisMap.portals = thisMap.portals || thisMap.defaults.portals;
 
+    thisMap.draw = function() {
         thisMap.element = document.createElement("table");
         thisMap.element.id = "map";
         document.body.appendChild( thisMap.element );
         thisMap.height = thisMap.coordinates.length * game.css.tileSize;
         thisMap.width = thisMap.coordinates[0].length * game.css.tileSize;
         loopThru(drawRow, drawCell);
-
         thisMap.backgrounds = thisMap.backgrounds || thisMap.defaults.backgrounds;
-        thisMap.walk = thisMap.walk || thisMap.defaults.walk;
-        thisMap.surf = thisMap.surf || thisMap.defaults.surf;
-        thisMap.portals = thisMap.portals || thisMap.defaults.portals;
         thisLocation.css = generateCSS(thisLocation);
     };
 
