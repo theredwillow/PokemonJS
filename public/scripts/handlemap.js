@@ -149,6 +149,7 @@ var generateMap = function(thisLocation) {
         delete thisLocation.player;
         delete thisLocation.css;
         document.body.removeChild( thisMap.element );
+        delete thisMap.element;
     };
 
     thisMap.move = (function(r,c) {
