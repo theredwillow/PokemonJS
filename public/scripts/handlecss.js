@@ -2,8 +2,6 @@ var generateCSS = function(thisSprite) {
 
     var thisCSS = {};
 
-    game.sprites.push(thisSprite);
-
     var resizeTiles = function() {
         if ( thisSprite.tileSize.width != thisSprite.tileSize.height ) {
             var ifWidthIsLonger = ( thisSprite.tileSize.width > thisSprite.tileSize.height );

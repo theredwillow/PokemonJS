@@ -2,6 +2,8 @@ function TestLab () {
 
     var thisLocation = this;
 
+    game.sprites.push(this);
+
     this.type = "location";
 
     this.name = "Pallet Town Lab (Test)";
@@ -71,8 +73,7 @@ function TestLab () {
         [ "c2", "a3", "a1", "b4", "b4", "b4", "b4", "b4", "b4", "b4" ],
         [ "c3", "b2", "b3", "b4", "b4", "b0", "c0", "b1", "b4", "c2" ],
         [ "b4", "b4", "b4", "b4", "b4", "b2", "c1", "b3", "b4", "c3" ],
-        [ "b4", "b4", "c4", "c4", "b4", "b4", "b4", "b4", "b4", "b4" ],
-        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ]
+        [ "b4", "b4", "c4", "c4", "b4", "b4", "b4", "b4", "b4", "b4" ]
     ];
 
     /*

@@ -2,6 +2,8 @@ function TestLocation() {
 
     var thisLocation = this;
 
+    game.sprites.push(this);
+
     this.type = "location";
 
     this.name = "Pallet Town (Test)";
@@ -9,8 +11,8 @@ function TestLocation() {
 
     this.image = "palletTown.png";
     this.imageDimensions = { x: 4, y: 11 };
-	this.imageSize = { width: 64, height: 176 };
-	this.tileSize = { width: 16, height: 16 };
+	  this.imageSize = { width: 64, height: 176 };
+	  this.tileSize = { width: 16, height: 16 };
 
     this.defaults = {};
 
@@ -182,7 +184,7 @@ function TestLocation() {
     this.defaults.portals = {};
     this.defaults.portals.legend = {
         "l0" : {
-          destination: { location: "Pallet Town Lab (Test)", r: 5, c: 2 },
+          destination: { location: "Pallet Town Lab (Test)", r: 4, c: 2 },
           directions: "-n--"
         },
         "r0" : {

@@ -99,7 +99,7 @@ var generateMap = function(thisLocation) {
     var setPortal = function(r,c) {
         if ( thisMap.portals.coordinates[r][c] != "--" ) {
             thisMap.rows[r].cells[c].portal =
-               thisMap.portals.legend[ thisMap.portals.coordinates[r][c] ];
+                thisMap.portals.legend[ thisMap.portals.coordinates[r][c] ];
             for (var i = 0; i < 4; i++) {
                 var direction = thisMap.rows[r].cells[c].portal.directions.charAt(i);
                 if ( direction != "-" ) {
@@ -143,13 +143,23 @@ var generateMap = function(thisLocation) {
         thisLocation.css = generateCSS(thisLocation);
     };
 
+    thisMap.erase = function() {
+        var parentNode = thisLocation.player.element.parentNode;
+        parentNode.removeChild( thisLocation.player.element );
+        delete thisLocation.player;
+        delete thisLocation.css;
+        document.body.removeChild( thisMap.element );
+    };
+
     thisMap.move = (function(r,c) {
         if ( typeof r == "undefined" && thisLocation.player ) {
             r = thisLocation.player.walk.location.r;
             c = thisLocation.player.walk.location.c;
         }
-        thisMap.element.style.top = ( window.innerHeight / 2 ) - thisMap.rows[r].relativeTop;
-        thisMap.element.style.left = ( window.innerWidth / 2 ) - thisMap.rows[r].cells[c].relativeLeft;
+        if ( thisMap.rows[r] && thisMap.rows[r].cells[c] ) {
+            thisMap.element.style.top = ( window.innerHeight / 2 ) - thisMap.rows[r].relativeTop;
+            thisMap.element.style.left = ( window.innerWidth / 2 ) - thisMap.rows[r].cells[c].relativeLeft;
+        }
     });
 
     window.addEventListener('resize', thisMap.move);

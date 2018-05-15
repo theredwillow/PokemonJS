@@ -2,6 +2,8 @@ function MaleTrainer(type){
 
 	var thisCharacter = this;
 
+	game.sprites.push(this);
+
 	this.type = type || "character";
 	this.name = name || "Red";
 	this.gender = "male";
@@ -61,31 +63,46 @@ function MaleTrainer(type){
 		foot: "right",
 
 		set location(pos) {
+			if ( thisCharacter.type == "player" ) {
+				if ( !thisCharacter.town.map.element )
+					thisCharacter.town.map.draw(thisCharacter.town, pos.r, pos.c);
+				document.body.appendChild( thisCharacter.town.map.element );
+			}
+			
 			var collision = false;
 			var newRow = thisCharacter.town.map.rows[pos.r];
-
 			if ( newRow && newRow.cells && newRow.cells[pos.c] ) {
 				if ( newRow.cells[pos.c].element ) {
 					if ( newRow.cells[pos.c].element.innerHTML )	
 						collision = "character";
 					else if ( newRow.cells[pos.c].portal )
-						collision = "building (portal: " + JSON.stringify( newRow.cells[pos.c].portal ) + ")";
+						collision = "building";
 					else if ( !newRow.cells[pos.c].walk )	
 						collision = "nonwalkable tile";
 				}
 				else if ( newRow.cells[pos.c].portal )	
-					collision = "route (portal: " + JSON.stringify( newRow.cells[pos.c].portal ) + ")";
+					collision = "route";
 			}
 			else	
 				collision = "border";
 			
-			if ( !collision || thisCharacter.god ) {
+			if ( collision ) {
+				if ( collision == "building" || collision == "route" ) {
+					var thisPort = thisCharacter.teleport(newRow.cells[pos.c].portal, collision);
+					if (!thisPort) {
+						this._location = { r: pos.r, c: pos.c };
+						thisCharacter.town.map.move();
+						newRow.cells[pos.c].element.appendChild(thisCharacter.element);
+					}
+				}
+				else if ( !thisCharacter.god )
+					console.log(thisCharacter.name, "can't move to row", pos.r + ", cell", pos.c + ". There's a", collision, "there.");
+			}
+			else {
 				this._location = { r: pos.r, c: pos.c };
 				thisCharacter.town.map.move();
 				newRow.cells[pos.c].element.appendChild(thisCharacter.element);
 			}
-			else
-				console.log("Bump! There's a", collision, "in the way!");
 		},
 		get location() {
 			return this._location;
@@ -93,7 +110,7 @@ function MaleTrainer(type){
 
 		set facing(pos) {
 			this._facing = pos;
-			thisCharacter.element.className = thisCharacter.element.className.replace(/\s?((north)|(south)|(east)|(west))/gi, "");;
+			thisCharacter.element.className = thisCharacter.element.className.replace(/\s?((north)|(south)|(east)|(west))/gi, "");
 			thisCharacter.element.className += " " + this._facing;
 		},
 		get facing() {
@@ -124,6 +141,23 @@ function MaleTrainer(type){
 
 	};
 
+	this.teleport = function(portal, collision) {
+		var destination = game.sprites.find(function(s){ return s.name == portal.destination.location; });
+		if (destination) {
+			if ( portal[ thisCharacter.walk.facing ] ) {
+				thisCharacter.town.map.erase();
+				thisCharacter.draw( destination, portal.destination.r, portal.destination.c );
+				return true;
+			}
+			else
+				return false;
+		}
+		else {
+			console.log("Portal is broken,", portal.destination.location, "wasn't loaded.");
+			return false;
+		}
+	};
+
 	this.moveTo = function(r,c) {
 
 		// Need to add spedUp functionality
@@ -139,9 +173,6 @@ function MaleTrainer(type){
 			r = Number( r.substr(1) );
 			r += thisCharacter.walk.location.r;
 		}
-		else {
-			thisCharacter.facing = "south";
-		}
 
 		if ( c[0] == "-" ) {
 			c = Number( c.substr(1) );
@@ -150,9 +181,6 @@ function MaleTrainer(type){
 		else if ( c[0] == "+" ){
 			c = Number( c.substr(1) );
 			c += thisCharacter.walk.location.c;
-		}
-		else {
-			thisCharacter.facing = "south";
 		}
 		
 		thisCharacter.walk.location = { r, c };

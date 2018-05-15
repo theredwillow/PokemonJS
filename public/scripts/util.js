@@ -25,7 +25,8 @@ game.css = {
         this.element.innerHTML += "margin: 0px; }";
 
         for (var c = 0; c < game.sprites.length; c++) {
-            game.sprites[c].css.generateStyles();
+            if ( game.sprites[c].css )
+                game.sprites[c].css.generateStyles();
         }
 
     }
