@@ -141,6 +141,11 @@ var generateMap = function(thisLocation) {
         loopThru(drawRow, drawCell);
         thisMap.backgrounds = thisMap.backgrounds || thisMap.defaults.backgrounds;
         thisLocation.css = generateCSS(thisLocation);
+        var ifHereDraw = function(sprite) {
+            if ( sprite.town == thisLocation )
+                sprite.draw(thisLocation, sprite.walk.location.r, sprite.walk.location.c);
+        };
+        game.sprites.forEach(ifHereDraw);
     };
 
     thisMap.erase = function() {

@@ -63,6 +63,7 @@ function MaleTrainer(type){
 		foot: "right",
 
 		set location(pos) {
+
 			if ( thisCharacter.type == "player" ) {
 				if ( !thisCharacter.town.map.element )
 					thisCharacter.town.map.draw(thisCharacter.town, pos.r, pos.c);
@@ -162,6 +163,9 @@ function MaleTrainer(type){
 
 		// Need to add spedUp functionality
 
+		if ( !thisCharacter.walk.location )
+			return;
+
 		r = r || thisCharacter.walk.location.r;
 		c = c || thisCharacter.walk.location.c;
 
@@ -217,6 +221,9 @@ function MaleTrainer(type){
 		this.p = 0;
 		this.pace = 3;
 		this.pacing = function() {
+			if ( !thisCharacter.town.player )
+				return;
+
 			switch (thisCharacter.p) {
 			    case 0:
 			    case 1:
