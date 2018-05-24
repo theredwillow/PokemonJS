@@ -12,8 +12,8 @@
     <script src="scripts/handlemap.js"></script>
 
     <!-- Location Scripts -->
+    <script src="scripts/handlelocation.js"></script>
     <script src="locations/TestLocation.js"></script>
-    <script src="locations/TestLab.js"></script>
 
     <!-- Sprite Scripts -->
     <script src="sprites/MaleTrainer.js"></script>
@@ -21,7 +21,7 @@
     <script>
         
         var town = new TestLocation();
-        var lab = new TestLab();
+        var lab = new Location("Pallet Town Lab (Test)");
         town.map.draw();
 
         var player = new MaleTrainer("player");
@@ -32,9 +32,11 @@
         test1.name = "Bob - Town";
         test1.draw(town, 1, 6);
 
+        /*
         var test2 = new MaleTrainer();
         test2.name = "Bob - Lab";
         test2.draw(lab, 1, 6);
+        */
 
     </script>
 
