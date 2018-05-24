@@ -19,16 +19,16 @@ function Location(name) {
             }
             else if ( dbResult.length == 1 ) {
                 dbResult = dbResult[0];
-                dbResult.defaults = JSON.parse(dbResult.defaults);
-                for ( var k in dbResult ) {
-                    thisLocation[k] = dbResult[k];
-                }
-                thisLocation.image = thisLocation.sprite;
 
-                thisLocation.imageDimensions = { x: 5, y: 3 };
-                thisLocation.imageSize = { width: 80, height: 48 };
-                thisLocation.tileSize = { width: 16, height: 16 };
-            
+                thisLocation.defaults = JSON.parse(dbResult.defaults);
+                thisLocation.creator = dbResult.creator;
+                thisLocation.image = dbResult.image;
+                thisLocation.imageDimensions = { x: dbResult.rows, y: dbResult.columns };
+                thisLocation.imageSize = { width: dbResult.width, height: dbResult.height };
+                thisLocation.tileSize = { };
+                thisLocation.tileSize.width = dbResult.width / dbResult.rows;
+                thisLocation.tileSize.height = dbResult.height / dbResult.columns;
+
                 thisLocation.map = generateMap(thisLocation);
             }
         }

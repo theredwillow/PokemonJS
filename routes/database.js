@@ -35,6 +35,12 @@ function dbCall(req, res, next) {
     };
 
     var dbRequest = "SELECT * FROM " + table;
+
+    if ( table == "locations" ) {
+        dbRequest += " INNER JOIN location_images"
+            + " ON location_images.path = locations.image";
+    }
+
     if (item) {
         dbRequest += " WHERE name = ?";
         db.all(dbRequest, item, displayData);
