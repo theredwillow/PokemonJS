@@ -46,7 +46,7 @@ function dbCall(req, res, next) {
 }
 
 function renderData(req, res) {
-    res.send( "poop:" + JSON.stringify(req.data) );
+    res.send( JSON.stringify(req.data) );
     db.close();
 }
 
