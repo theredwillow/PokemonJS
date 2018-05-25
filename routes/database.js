@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 
-function dbCall(req, res, next) {
+function dbSelect(req, res, next) {
 
     var db = new sqlite3.Database('./database.db');
     /*
@@ -22,8 +22,12 @@ function dbCall(req, res, next) {
         return next();
     }
 
-    var table = req.query.table || ( req.query.loc ) ? "locations" : "users";
+    var table = req.query.table;
+    if (!table) {
+        table = ( req.query.loc ) ? "locations" : "users";
+    }
     var item = req.query.loc || req.query.user;
+    var hashSent = req.query.hash;
 
     var displayData = function(error, rows) {
         // console.log("rows", rows);
@@ -34,16 +38,19 @@ function dbCall(req, res, next) {
         return next();
     };
 
-    var dbRequest = "SELECT * FROM " + table;
-
+    var dbRequest;
     if ( table == "locations" ) {
-        dbRequest += " INNER JOIN location_images"
+        dbRequest = "SELECT * FROM locations"
+            + " INNER JOIN location_images"
             + " ON location_images.path = locations.image";
+    }
+    else {
+        dbRequest = "SELECT name, location, sprite FROM users";
     }
 
     if (item) {
         dbRequest += " WHERE name = ?";
-        db.all(dbRequest, item, displayData);
+        db.get(dbRequest, item, displayData);
     }
     else {
         db.all(dbRequest, displayData);
@@ -56,7 +63,7 @@ function renderData(req, res) {
     db.close();
 }
 
-router.get('/select', dbCall, renderData);
+router.get('/select', dbSelect, renderData);
 // router.get('/insert', dbCall, renderData);
 // router.get('/update', dbCall, renderData);
 
