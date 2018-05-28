@@ -1,11 +1,17 @@
 {{#if user}}
 
 <script>
-    
+    var mainMenu = new MenuDisplay();
+    mainMenu.options = [
+        "Resume Game",
+        "New Game",
+        "Settings"
+    ];
+    var drawMenu = function() {
+        var gameboyScreen = document.getElementById("gameboy_screen");
+        mainMenu.draw(gameboyScreen);
+    }
+    window.addEventListener("load", drawMenu);
 </script>
-
-<span class="menu_option selected">Resume game!</span><br/>
-<span class="menu_option">New game</span><br/>
-<span class="menu_option">Settings</span>
 
 {{/if}}

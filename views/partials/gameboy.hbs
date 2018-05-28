@@ -16,6 +16,7 @@
         {{/unless}}
 
         changeGBSizes();
+
     };
     window.addEventListener("load", defineVariables);
 
@@ -24,11 +25,13 @@
         var gbHeight = gameboy.getBoundingClientRect().height;
         gameboy.style.width = 0.62 * gbHeight;
 
-        var screenWidth = gameboyScreen.getBoundingClientRect().width;
         {{#if user}}
-        var optionWidth = menuOptions[0].getBoundingClientRect().width;
-        for ( var i = 0; i < menuOptions.length; i++ ) {
-            menuOptions[i].style.fontSize = ( fontSize * ( screenWidth / optionWidth ) ) + "px";
+        if (menuOptions.length) {
+            var screenWidth = gameboyScreen.getBoundingClientRect().width;
+            var optionWidth = menuOptions[0].getBoundingClientRect().width;
+            for ( var i = 0; i < menuOptions.length; i++ ) {
+                menuOptions[i].style.fontSize = ( fontSize * ( screenWidth / optionWidth ) ) + "px";
+            }
         }
         {{/if}}
     };
