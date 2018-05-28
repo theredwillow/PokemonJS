@@ -3,11 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var hbs = require('hbs');
 
 var indexRouter = require('./routes/index');
 var toolsRouter = require('./routes/tools');
 var dbRouter = require('./routes/database');
 var verifyRouter = require('./routes/verify');
+var logoutRouter = require('./routes/logout');
 
 var app = express();
 
@@ -21,10 +23,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+hbs.registerPartials(__dirname + '/views/partials');
 app.use('/', indexRouter);
 app.use('/tools', toolsRouter);
 app.use('/db', dbRouter);
 app.use('/verify', verifyRouter);
+app.use('/logout', logoutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

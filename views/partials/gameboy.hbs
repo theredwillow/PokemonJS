@@ -1,0 +1,45 @@
+<script src="scripts/optimizedResize.js"></script>
+<script>
+
+    var gameboy;
+    var gameboyScreen;
+    var menuOptions;
+
+    var defineVariables = function() {
+        gameboy = document.getElementById("gameboy");
+        gameboyScreen = document.getElementById("gameboy_screen");
+        menuOptions = document.getElementsByClassName("menu_option");
+
+        {{#unless user}}
+        gameboyScreen.style.backgroundColor = "black";
+        {{/unless}}
+
+        changeGBSizes();
+    };
+    window.addEventListener("load", defineVariables);
+
+    var fontSize = 10;
+    var changeGBSizes = function() {
+        var gbHeight = gameboy.getBoundingClientRect().height;
+        gameboy.style.width = 0.62 * gbHeight;
+
+        var screenWidth = gameboyScreen.getBoundingClientRect().width;
+        var optionWidth = menuOptions[0].getBoundingClientRect().width;
+        for ( var i = 0; i < menuOptions.length; i++ ) {
+            menuOptions[i].style.fontSize = ( fontSize * ( screenWidth / optionWidth ) ) + "px";
+        }
+    };
+
+    window.addEventListener("optimizedResize", changeGBSizes);
+
+</script>
+
+<div id="gameboy">
+    <div id="gameboy_screen">
+        {{#if user}}
+        <span class="menu_option">Resume game</span><br/>
+        <span class="menu_option">New game</span><br/>
+        <span class="menu_option">Settings</span>
+        {{/if}}
+    </div>
+</div>

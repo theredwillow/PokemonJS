@@ -2,163 +2,11 @@
 <head>
     <title>PokemonJS</title>
     <link rel="stylesheet" href="/styles/pokemonFont.css" type="text/css" charset="utf-8" />
+    <link rel="stylesheet" href="/styles/index.css" type="text/css" charset="utf-8" />
 </head>
 <body>
 
-<style>
-
-body {
-    background-color: firebrick;
-}
-
-#sign-in {
-    position: absolute;
-    background-color: lavender;
-    width: 27%;
-    height: 34%;
-    border-radius: 20px;
-    padding: 17px;
-    top: 12%;
-    left: 13%;
-}
-
-#notification {
-    font-weight: bold;
-    color: red;
-    visibility: hidden;
-}
-
-#instructions {
-    position: absolute;
-    background-color: lavenderblush;
-    width: 17%;
-    height: 20%;
-    border-radius: 20px;
-    padding: 17px;
-    top: 62%;
-    left: 18%;
-}
-
-#gameboy {
-    height: 100%;
-    background-image: url(images/gameboy.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    position: absolute;
-    top: 0px;
-    left: 50%;
-}
-
-#gameboy_screen {
-    background-color: darkgreen;
-    color: cyan;
-    position: relative;
-    width: 44%;
-    height: 24.5%;
-    left: 25%;
-    top: 14%;
-    padding: 3%;
-}
-
-.menu_option {
-    font-family: 'pokemon', Arial, sans-serif;
-    letter-spacing: 1px;
-}
-
-</style>
-
-<script>
-
-var gameboy;
-var gameboyScreen;
-var usernameField;
-var passwordField;
-var signInArea;
-var signInButton;
-var notificationSpan;
-var menuOptions;
-window.onload = function() {
-    gameboy = document.getElementById("gameboy");
-    gameboyScreen = document.getElementById("gameboy_screen");
-    usernameField = document.getElementById("username");
-    passwordField = document.getElementById("password");
-    signInArea = document.getElementById("sign-in");
-    signInButton = document.getElementById("sign-in-button");
-    notificationSpan = document.getElementById("notification");
-    menuOptions = document.getElementsByClassName("menu_option");
-    changeGBSizes();
-    signInButton.addEventListener("click", tryLoggingIn);
-
-
-    {{#if user}}
-    var username = "{{user}}";
-    signInArea.innerHTML = username;
-    {{/if}}
-
-};
-
-var fontSize = 10;
-var changeGBSizes = function() {
-    var gbHeight = gameboy.getBoundingClientRect().height;
-    gameboy.style.width = 0.62 * gbHeight;
-
-    var screenWidth = gameboyScreen.getBoundingClientRect().width;
-    var optionWidth = menuOptions[0].getBoundingClientRect().width;
-    for ( var i = 0; i < menuOptions.length; i++ ) {
-        menuOptions[i].style.fontSize = ( fontSize * ( screenWidth / optionWidth ) ) + "px";
-    }
-};
-
-var resizeCountdown;
-var resizeThrottler = function() {
-    clearTimeout(resizeCountdown);
-    resizeCountdown = setTimeout(changeGBSizes, 100);
-};
-
-window.addEventListener("resize", resizeThrottler, false);
-
-var attemptLogin = function(name,password) {
-    var ajax = new XMLHttpRequest();
-    ajax.open( 'POST', '/verify?user=' + name + '&pw=' + password );
-    console.log( '/verify?user=' + name + '&pw=' + password );
-    ajax.onload = function() {
-        if ( ajax.status === 200 ) {
-            var dbResult = JSON.parse(ajax.responseText);
-            if ( "error" in dbResult ) {
-                notificationSpan.innerHTML = dbResult.error;
-                notificationSpan.style.visibility = "visible"; 
-                // throw dbResult.error;
-            }
-            else {
-                notificationSpan.style.visibility = "hidden"; 
-                console.log("yay!");
-            }
-        }
-        else {
-            notificationSpan.innerHTML = "Database connection error, please try again.";
-            notificationSpan.style.visibility = "visible";
-        }
-    };
-    ajax.send();
-};
-
-var tryLoggingIn = function() {
-    attemptLogin( usernameField.value, passwordField.value );
-};
-
-</script>
-
-<div id="sign-in">
-    Username:<br/>
-    <input type="text" id="username"/><br/>
-    Password:<br/>
-    <input type="password" id="password"/><br/>
-    <span id="notification">Log-in error</span><br/>
-    <button>Register</button><button id="sign-in-button">Sign-In</button>
-</div>
-
-{{> signin}}
+{{> login}}
 
 <div id="instructions">
     Sign in to resume your game.<br/>
@@ -167,13 +15,7 @@ var tryLoggingIn = function() {
     Sign up to start your adventure!
 </div>
 
-<div id="gameboy">
-    <div id="gameboy_screen">
-        <span class="menu_option">Resume game</span><br/>
-        <span class="menu_option">New game</span><br/>
-        <span class="menu_option">Settings</span>
-    </div>
-</div>
+{{> gameboy}}
 
 </body>
 </html>

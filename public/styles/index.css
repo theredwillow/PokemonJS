@@ -1,0 +1,58 @@
+body {
+    background-color: firebrick;
+}
+
+#sign-in {
+    position: absolute;
+    background-color: lavender;
+    width: 27%;
+    height: 34%;
+    border-radius: 20px;
+    padding: 17px;
+    top: 12%;
+    left: 13%;
+}
+
+#notification {
+    font-weight: bold;
+    color: red;
+    visibility: hidden;
+}
+
+#instructions {
+    position: absolute;
+    background-color: lavenderblush;
+    width: 17%;
+    height: 20%;
+    border-radius: 20px;
+    padding: 17px;
+    top: 62%;
+    left: 18%;
+}
+
+#gameboy {
+    height: 100%;
+    background-image: url("/images/gameboy.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    position: absolute;
+    top: 0px;
+    left: 50%;
+}
+
+#gameboy_screen {
+    background-color: darkgreen;
+    color: cyan;
+    position: relative;
+    width: 44%;
+    height: 24.5%;
+    left: 25%;
+    top: 14%;
+    padding: 3%;
+}
+
+.menu_option {
+    font-family: 'pokemon', Arial, sans-serif;
+    letter-spacing: 1px;
+}
