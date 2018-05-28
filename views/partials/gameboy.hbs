@@ -1,3 +1,4 @@
+<script src="scripts/controls.js"></script>
 <script src="scripts/optimizedResize.js"></script>
 <script>
 
@@ -24,10 +25,12 @@
         gameboy.style.width = 0.62 * gbHeight;
 
         var screenWidth = gameboyScreen.getBoundingClientRect().width;
+        {{#if user}}
         var optionWidth = menuOptions[0].getBoundingClientRect().width;
         for ( var i = 0; i < menuOptions.length; i++ ) {
             menuOptions[i].style.fontSize = ( fontSize * ( screenWidth / optionWidth ) ) + "px";
         }
+        {{/if}}
     };
 
     window.addEventListener("optimizedResize", changeGBSizes);
@@ -35,11 +38,28 @@
 </script>
 
 <div id="gameboy">
+
     <div id="gameboy_screen">
-        {{#if user}}
-        <span class="menu_option">Resume game</span><br/>
-        <span class="menu_option">New game</span><br/>
-        <span class="menu_option">Settings</span>
-        {{/if}}
+        {{> screen}}
     </div>
+
+    <div id="a_button" class="round_button"
+        onclick="document.dispatchEvent(keydownEvents['a']);"></div>
+    <div id="b_button" class="round_button"
+        onclick="document.dispatchEvent(keydownEvents['b']);"></div>
+
+    <div id="up_button" class="directional_button"
+        onclick="document.dispatchEvent(keydownEvents['up']);"></div>
+    <div id="down_button" class="directional_button"
+        onclick="document.dispatchEvent(keydownEvents['down']);"></div>
+    <div id="left_button" class="directional_button"
+        onclick="document.dispatchEvent(keydownEvents['left']);"></div>
+    <div id="right_button" class="directional_button"
+        onclick="document.dispatchEvent(keydownEvents['right']);"></div>
+
+    <div id="start_button" class="setting_button"
+        onclick="document.dispatchEvent(keydownEvents['start']);"></div>
+    <div id="select_button" class="setting_button"
+        onclick="document.dispatchEvent(keydownEvents['select']);"></div>
+
 </div>
