@@ -9,6 +9,7 @@ function Location(name) {
     this.name = name;
     this.id = this.name.replace(/[\s()\[\]]/g,"");
 
+    var loadedEvent = new CustomEvent( "LocationLoaded", {"detail": name} );
     var ajax = new XMLHttpRequest();
     ajax.open( 'GET', '/db/select?loc=' + name );
     ajax.onload = function() {
@@ -18,7 +19,6 @@ function Location(name) {
                 throw dbResult.error;
             }
             else if ( dbResult.length == 1 ) {
-                dbResult = dbResult[0];
 
                 thisLocation.defaults = JSON.parse(dbResult.defaults);
                 thisLocation.creator = dbResult.creator;
@@ -30,6 +30,13 @@ function Location(name) {
                 thisLocation.tileSize.height = dbResult.height / dbResult.columns;
 
                 thisLocation.map = generateMap(thisLocation);
+
+                if ( !game.sprites.length ) {
+                    thisLocation.map.draw();
+                }
+
+                console.log(name, "loaded, dispatching");
+                document.dispatchEvent( loadedEvent );
             }
         }
         else {

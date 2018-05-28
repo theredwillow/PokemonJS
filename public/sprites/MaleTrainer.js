@@ -7,7 +7,6 @@ function MaleTrainer(type){
 	this.type = type || "character";
 	this.name = name || "Red";
 	this.gender = "male";
-	this.location = { r: 0, c: 0 };
 
 	this.id = "male-trainer";
 
@@ -41,7 +40,25 @@ function MaleTrainer(type){
 
 	this.css = generateCSS(this);
 
-	this.draw = function(townIn, r, c) {
+	this.checkIfLocation = function(e) {
+		if (e.detail == thisCharacter.tempMemory.town) {
+			console.log(thisCharacter.tempMemory.town + " loaded!");
+			document.removeEventListener("LocationLoaded", thisCharacter.checkIfLocation);
+			thisCharacter.draw = thisCharacter.loadedDraw;
+			var town = game.sprites.find(function(a){ return a.type == "location" && a.name == thisCharacter.tempMemory.town; });
+			thisCharacter.draw(town, thisCharacter.tempMemory.r, thisCharacter.tempMemory.c);
+			delete thisCharacter.tempMemory;
+		}
+	};
+
+	this.draw = function(town, r, c) {
+		console.log("Draw called, waiting for load");
+		thisCharacter.tempMemory = { town, r, c };
+		document.addEventListener("LocationLoaded", thisCharacter.checkIfLocation);
+	};
+
+	this.loadedDraw = function(townIn, r, c) {
+		console.log("Actually drawing:", townIn, r, c);
 		thisCharacter.element = document.createElement("div");
 		thisCharacter.element.id = this.name;
 		thisCharacter.element.className = "male-trainer";
@@ -53,7 +70,7 @@ function MaleTrainer(type){
 			townIn.player = thisCharacter;
 		thisCharacter.town = townIn;
 
-		this.element.addEventListener("talk", thisCharacter.onTalk, false);
+		thisCharacter.element.addEventListener("talk", thisCharacter.onTalk, false);
 		
 		thisCharacter.walk.location = { r, c };
 	};
@@ -221,7 +238,7 @@ function MaleTrainer(type){
 		this.p = 0;
 		this.pace = 3;
 		this.pacing = function() {
-			if ( !thisCharacter.town.player )
+			if ( !thisCharacter.town || !thisCharacter.town.player )
 				return;
 
 			switch (thisCharacter.p) {

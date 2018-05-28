@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>PokemonJS</title>
+    <link rel="stylesheet" type="text/css" href="styles/map.css">
+</head>
+<body>
+
+    <!-- Utility Scripts -->
+    <script src="scripts/controls.js"></script>
+    <script src="scripts/util.js"></script>
+    <script src="scripts/handlecss.js"></script>
+    <script src="scripts/handlemap.js"></script>
+
+    <!-- Location Scripts -->
+    <script src="scripts/handlelocation.js"></script>
+    <script src="locations/TestLocation.js"></script>
+
+    <!-- Sprite Scripts -->
+    <script src="sprites/MaleTrainer.js"></script>
+
+    <script>
+        
+        var town = new Location("Pallet Town (Test)");
+        var lab = new Location("Pallet Town Lab (Test)");
+
+        var player = new MaleTrainer("player");
+        player.name = "Jared";
+        player.draw("Pallet Town (Test)", 4, 2);
+
+/*
+        var test1 = new MaleTrainer();
+        test1.name = "Bob - Town";
+        test1.draw("Pallet Town (Test)", 1, 6);
+
+        var test2 = new MaleTrainer();
+        test2.name = "Bob - Lab";
+        test2.draw("Pallet Town Lab (Test)", 1, 6);
+*/
+    </script>
+
+</body>
+</html>

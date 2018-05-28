@@ -27,7 +27,6 @@ function dbSelect(req, res, next) {
         table = ( req.query.loc ) ? "locations" : "users";
     }
     var item = req.query.loc || req.query.user;
-    var hashSent = req.query.hash;
 
     var displayData = function(error, rows) {
         // console.log("rows", rows);

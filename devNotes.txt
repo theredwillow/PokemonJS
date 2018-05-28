@@ -1,0 +1,71 @@
+
+- Create airport to fly to other locations that aren't connected.
+- Finish creating log in
+- Save button
+- Auto save feature, countdown to save, clicking the button opens the interval options
+- Create gameboy off splash screen
+- Map dynamically created from tile maps
+- Snow footprints
+- Location based battles (jungle? grass type strong)
+- Pageants for vegan players' pokemon, happiness wins points
+
+
+TEAM ROCKET IDEAS
+- Team Rocket member stealing pokemon, statistics of whether a police officer will see you or not, adding to your jail sentence and throwing you in jail if you get caught by walking officer character
+- Members sentences, and whether they've broken out before, can be seen in the jail's museum
+- Members can still steal in jail cell, guard will see it though and add time to their sentence
+- Jail for team rocket members, escape plans, expiration for non-escaped
+- Officer Jenny tracking Team Rocket members
+
+MILITARY IDEAS
+- Missions with assigned pokemons
+
+TRAINER IDEAS
+- Play random campaigns
+- Story builder, earn badges designed in pixel drawing
+- Subscribe to story builders, have them randomly appear in town portals
+- Determine trainer type by averages
+- Collect badges by beating campaigns, includes notes about when they beat it and how long it took
+- In progress badge, let's other users looking at your profile know which badge you're attempting to earn right now and how long you've been at it
+
+TRAINER LEVEL IDEAS
+- Determine trainer level by average
+- Face only wild pokemon in your 5-level interval
+- Trainers can challenge anyone, but they can only bet according to their odds, opponent must accept bet, ability to turn off fight offers
+
+CAMPAIGN IDEAS
+- After defeating the main world, you are able to visit the airport.
+    The airport consists of:
+        1. A ticket booth you can use to visit prebuilt worlds... wherever the location builder set the portals to, laid out
+        2. A volunteer trip travel center. An employee helps you build your volunteer trip by combining campaigns... you can subscribe to an author to see them first or block an author to hide them. There is also a random picker.
+- Campaign builder
+- Language settings, only enter English speaking campaigns
+- Campaign deletion handling: holding room in airport with vague newspapers on the table "<Name of location> disappears! Survivors confused but brought to the <user's home> airport", leaving the room locks the door
+- Create gym leaders based on strengthes and weaknesses, types and levels
+
+CAMPAIGN BUILDER OPTIONS
+- Name
+- Gym leader: pokemon, level, name
+- Badge image
+- Requirements: pokemon level, types, etc...
+- Needs: walk over toggles, beat a trainer, talk to someone, catch a certain number or type of pokemon, trade pokemon
+- Beat campaign: rating, subscribe to author
+- Pay for upgrades with trainer points, earn discounts by including ads
+
+SENSAIS
+- Beginning of game, corrupt dad teaches you how to kill pokemon
+- Beginning of the game, you choose one when you choose your starter
+- Three have different end results
+- Rare random fights against pokemon stronger than you are handled by sensai
+- You're required to talk to all lab techs before choosing a sensai, they provide foreshadowing about sensai's
+- ONE: vegan, he forces you to catch only one pokemon at a time, it follows you like pikachu in yellow, your pokemon happiness is always higher than anyone else's, he forces you to quit battles where you'd have to kill a pokemon
+    lab tech: "he doesn't let you catch more than one pokemon, I thought that was stupid at first, but my <pokemon> couldn't be happier"
+    required campaign: free pokemon from slaughterhouse
+- TWO: corrupt dad, he eventually joins Team Rocket and pressures you to too, he helps you catch pokemon randomly, he encourages you to kill pokemon frequently
+    lab tech "you grew up around him, surely you know he's so unstable. he cost me <time period> in jail and he's always murdering pokemon! but you know what... their is incredible strength in being the first to attact. I've grown a lot more powerful because of him"
+- THREE: 
+- When your sensai has finished training you, you're free to play user-created campaigns
+
+BADGES:
+-vegan advocacy: vegan sensai's required campaign
+-team rocket membership: corrupt dad's required
