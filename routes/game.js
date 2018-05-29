@@ -27,11 +27,11 @@ var loadGame = function (req, res, next) {
 };
 
 var drawGame = function(req, res, next) {
-    res.render('game', { user : req.cookies.username, town: req.data.town });
+    res.render('game.load.hbs', { user : req.cookies.username, town: req.data.town });
 };
 
 var newGame = function(req, res, next) {
-    res.render('game', { user : "NEW " + req.cookies.username });
+    res.render('game.new.hbs', { user : req.cookies.username });
 };
 
 router.get('/', verify, loadGame);
