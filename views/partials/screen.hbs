@@ -2,14 +2,20 @@
 
 <script>
     var mainMenu = new MenuDisplay();
+
     mainMenu.options = [
         "Resume Game",
         "New Game",
         "Settings"
     ];
-    mainMenu.finalize = function(selection) {
+
+    mainMenu.finalize.anySelection = function(selection) {
         alert("You chose to " + selection);
     };
+    mainMenu.finalize[0] = function() {
+        alert("First!");
+    };
+
     var drawMenu = function() {
         var gameboyScreen = document.getElementById("gameboy_screen");
         mainMenu.draw(gameboyScreen);

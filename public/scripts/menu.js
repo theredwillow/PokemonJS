@@ -45,7 +45,13 @@ var MenuDisplay = function() {
     };
 
     this.chooseSelection = function() {
-        thisMenu.finalize(thisMenu.selected);
+        var selectedIndex = thisMenu.options.indexOf(thisMenu.selected);
+
+        if (thisMenu.finalize[selectedIndex])
+            thisMenu.finalize[selectedIndex]();
+
+        if (thisMenu.finalize.anySelection)
+            thisMenu.finalize.anySelection(thisMenu.selected);
     };
 
     this.draw = function(parentEl) {
@@ -74,5 +80,7 @@ var MenuDisplay = function() {
         document.addEventListener("pushA", thisMenu.chooseSelection);
 
     };
+
+    this.finalize = [];
 
 };
