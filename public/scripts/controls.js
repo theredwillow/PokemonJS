@@ -37,9 +37,8 @@ function dispatchKeyDown(e) {
 	if ( buttonPressed ) {
 		if ( buttonPressed == "speed" )
 			spedUp = true;
-		else {
+		else
 			document.dispatchEvent( keydownEvents[buttonPressed] );
-		}
 	}
 }
 

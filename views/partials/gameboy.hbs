@@ -15,28 +15,16 @@
         gameboyScreen.style.backgroundColor = "black";
         {{/unless}}
 
-        changeGBSizes();
+        changeGBWidth();
 
     };
     window.addEventListener("load", defineVariables);
 
-    var fontSize = 10;
-    var changeGBSizes = function() {
+    var changeGBWidth = function() {
         var gbHeight = gameboy.getBoundingClientRect().height;
         gameboy.style.width = 0.62 * gbHeight;
-
-        {{#if user}}
-        if (menuOptions.length) {
-            var screenWidth = gameboyScreen.getBoundingClientRect().width;
-            var optionWidth = menuOptions[0].getBoundingClientRect().width;
-            for ( var i = 0; i < menuOptions.length; i++ ) {
-                menuOptions[i].style.fontSize = ( fontSize * ( screenWidth / optionWidth ) ) + "px";
-            }
-        }
-        {{/if}}
     };
-
-    window.addEventListener("optimizedResize", changeGBSizes);
+    window.addEventListener("optimizedResize", changeGBWidth);
 
 </script>
 

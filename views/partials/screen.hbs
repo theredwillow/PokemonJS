@@ -7,6 +7,9 @@
         "New Game",
         "Settings"
     ];
+    mainMenu.finalize = function(selection) {
+        alert("You chose to " + selection);
+    };
     var drawMenu = function() {
         var gameboyScreen = document.getElementById("gameboy_screen");
         mainMenu.draw(gameboyScreen);
