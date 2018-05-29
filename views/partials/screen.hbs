@@ -13,7 +13,10 @@
         alert("You chose to " + selection);
     };
     mainMenu.finalize[0] = function() {
-        alert("First!");
+        window.location.href = "/game";
+    };
+    mainMenu.finalize[1] = function() {
+        window.location.href = "/game/new";
     };
 
     var drawMenu = function() {

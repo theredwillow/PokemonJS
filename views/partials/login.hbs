@@ -68,7 +68,7 @@
 
     var attemptLogin = function(name,password) {
         var ajax = new XMLHttpRequest();
-        ajax.open( 'POST', '/verify?user=' + name + '&pw=' + password );
+        ajax.open( 'POST', '/login?user=' + name + '&pw=' + password );
         ajax.onload = function() {
             if ( ajax.status === 200 ) {
                 var dbResult = JSON.parse(ajax.responseText);

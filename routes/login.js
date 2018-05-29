@@ -26,7 +26,7 @@ function dbSelect(req, res, next) {
     var db = new sqlite3.Database('./database.db');
 
     if ( !req.query.user || !req.query.pw ) {
-        req.data = { "error": "You must provide a name and password to verify." };
+        req.data = { "error": "You must provide a name and password to log in." };
         return next();
     }
 

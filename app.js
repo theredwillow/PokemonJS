@@ -8,8 +8,9 @@ var hbs = require('hbs');
 var indexRouter = require('./routes/index');
 var toolsRouter = require('./routes/tools');
 var dbRouter = require('./routes/database');
-var verifyRouter = require('./routes/verify');
+var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
+var gameRouter = require('./routes/game');
 
 var app = express();
 
@@ -27,8 +28,9 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.use('/', indexRouter);
 app.use('/tools', toolsRouter);
 app.use('/db', dbRouter);
-app.use('/verify', verifyRouter);
+app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
+app.use('/game', gameRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
