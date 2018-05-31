@@ -1,35 +1,41 @@
-var sqlite3 = require('sqlite3').verbose();
+var mongo = require('mongodb').MongoClient;
 
-var dbRequest = "SELECT * FROM `log-in` WHERE name = ? & token = ?";
+var req, res, next;
 
-function isInDatabase(req) {
-
-    var db = new sqlite3.Database('./database.db');
-
-    if ( !req.cookies.username || !req.cookies.token ) {
-        return false;
-    }
-
-    var checkData = function(error, rows) {
-        // console.log("rows", rows);
-
-        if ( !rows || rows.length == 0 )
-            return false;
-        else
-            return true;
-    };
-
-    return db.get(dbRequest, req.cookies.username, req.cookies.token, checkData);
-
-}
-
-module.exports = function(req, res, next) {
-    if ( isInDatabase(req) ) {
+var finish = function(err,rows) {
+    if ( rows > 0 )
         return next();
-    }
     else {
         res.clearCookie("token");
         res.clearCookie("username");
         res.redirect('/');
     }
 };
+
+
+var isInDatabase = function isInDatabase() {
+    mongo.connect(mongoURL, function(err, client) {
+        var tokenCollection = client.db('database').collection('login');
+        var tokenCookies = {
+            _id: req.cookies.username,
+            token: req.cookies.token
+        };
+        Boolean( tokenCollection.count(tokenCookies, finish) );
+    });
+};
+
+var verify = function(request, result, nextFunc) {
+    req = request;
+    res = result;
+    next = nextFunc;
+
+    if ( !req.cookies.username || !req.cookies.token ) {
+        res.clearCookie("token");
+        res.clearCookie("username");
+        res.redirect('/');
+    }
+    else
+        isInDatabase();
+};
+
+module.exports = verify;

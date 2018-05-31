@@ -4,13 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var hbs = require('hbs');
+var mongo = require('mongodb').MongoClient;
+var io = require('socket.io').listen(4000);
+
+global.mongoURL = "mongodb://127.0.0.1";
 
 var indexRouter = require('./routes/index');
 var toolsRouter = require('./routes/tools');
-var dbRouter = require('./routes/database');
-var loginRouter = require('./routes/login');
-var logoutRouter = require('./routes/logout');
 var gameRouter = require('./routes/game');
+
+var login = require('./middleware/login');
+var logout = require('./middleware/logout');
 
 var app = express();
 
@@ -25,12 +29,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 hbs.registerPartials(__dirname + '/views/partials');
+
 app.use('/', indexRouter);
 app.use('/tools', toolsRouter);
-app.use('/db', dbRouter);
-app.use('/login', loginRouter);
-app.use('/logout', logoutRouter);
 app.use('/game', gameRouter);
+
+app.post('/login', login);
+app.post('/logout', logout);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -39,13 +44,13 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;

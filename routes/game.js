@@ -1,37 +1,48 @@
 var express = require('express');
 var router = express.Router();
-var sqlite3 = require('sqlite3').verbose();
-
+var mongo = require('mongodb').MongoClient;
 var verify = require('../middleware/verify');
 
-var dbRequest = "SELECT town FROM users WHERE name = ?";
+var req, res, next;
 
-var loadGame = function (req, res, next) {
+var loadGame = function (request, result, nextFunc) {
+    req = request;
+    res = result;
+    next = nextFunc;
 
-    var db = new sqlite3.Database('./database.db');
+    mongo.connect(mongoURL, function(err, client) {
 
-    var displayData = function(error, rows) {
-        console.log("rows", rows);
-        if ( rows && rows.length !== 0 ) {
-            req.data = rows;
-            drawGame(req, res, next);
-        }
-        else {
-            req.data = { "error": "No such records found." };
-            newGame(req, res, next);
-        }
-    };
+        var userCollection = client.db('database').collection('users');
 
-    db.get(dbRequest, req.cookies.username, displayData);
+        var loadOrNew = function(error, rows) {
+            if ( rows && rows.length ) {
+                req.data = rows[0];
+                drawGame();
+            }
+            else {
+                req.data = { "error": "No such records found." };
+                newGame(req, res, next);
+            }
+        };
 
+        userCollection.find({ _id : req.cookies.username }, { town:1, _id:0 }).toArray(loadOrNew);
+
+    });
 };
 
-var drawGame = function(req, res, next) {
+var drawGame = function() {
     res.render('game.load.hbs', { user : req.cookies.username, town: req.data.town });
 };
 
-var newGame = function(req, res, next) {
-    res.render('game.new.hbs', { user : req.cookies.username });
+var newGame = function(request, result, nextFunc) {
+    req = request;
+    res = result;
+    next = nextFunc;
+
+    if (req.cookies.username)
+        res.render('game.new.hbs', { user : req.cookies.username });
+    else
+        res.redirect('/');
 };
 
 router.get('/', verify, loadGame);
