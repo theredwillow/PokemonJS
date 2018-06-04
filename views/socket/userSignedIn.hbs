@@ -1,0 +1,9 @@
+socket.on('userSignedIn', function(newUser) {
+
+    // Avoid counting new tab of same player
+    if ( newUser == player.name )
+        return;
+
+    console.log(newUser, "has signed-in.");
+
+});

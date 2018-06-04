@@ -10,7 +10,6 @@ var io = require('socket.io').listen(4000);
 global.mongoURL = "mongodb://127.0.0.1";
 
 var indexRouter = require('./routes/index');
-var toolsRouter = require('./routes/tools');
 var gameRouter = require('./routes/game');
 
 var login = require('./middleware/login');
@@ -29,9 +28,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 hbs.registerPartials(__dirname + '/views/partials');
+hbs.registerPartials(__dirname + '/views/socket');
 
 app.use('/', indexRouter);
-app.use('/tools', toolsRouter);
 app.use('/game', gameRouter);
 
 app.post('/login', login);

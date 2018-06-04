@@ -1,36 +1,37 @@
-body {
-    background-color: firebrick;
-}
+<script src="scripts/controls.js"></script>
+<script>
 
-#sign-in {
-    position: absolute;
-    background-color: lavender;
-    width: 27%;
-    height: 34%;
-    border-radius: 20px;
-    padding: 17px;
-    top: 12%;
-    left: 13%;
-}
+    var gameboy;
+    var gameboyScreen;
+    var menuOptions;
 
-#notification {
-    font-weight: bold;
-    color: red;
-    visibility: hidden;
-}
+    var defineVariables = function() {
+        gameboy = document.getElementById("gameboy");
+        gameboyScreen = document.getElementById("gameboy_screen");
+        menuOptions = document.getElementsByClassName("menu_option");
 
-#instructions {
-    position: absolute;
-    background-color: lavenderblush;
-    width: 17%;
-    height: 20%;
-    border-radius: 20px;
-    padding: 17px;
-    top: 62%;
-    left: 18%;
-}
+        {{#unless user}}
+        gameboyScreen.style.backgroundColor = "black";
+        {{/unless}}
 
-#gameboy {
+        changeGBWidth();
+
+    };
+    window.addEventListener("load", defineVariables);
+
+    var changeGBWidth = function() {
+        var gbHeight = gameboy.getBoundingClientRect().height;
+        if (!gbHeight) return setTimeout(changeGBWidth, 100);
+        gameboy.style.width = 0.62 * gbHeight;
+    };
+    window.addEventListener("optimizedResize", changeGBWidth);
+
+</script>
+
+<style>
+    
+#gameboy
+{
     height: 100%;
     background-image: url("/images/gameboy.png");
     background-repeat: no-repeat;
@@ -38,7 +39,18 @@ body {
     background-size: contain;
     position: absolute;
     top: 0px;
-    left: 50%;
+}
+
+.desktop #gameboy
+{
+    left: 35%;
+}
+
+.mobile #gameboy
+{
+    left: 0px;
+    right: 0px;
+    top:10px;
 }
 
 #gameboy_screen {
@@ -125,3 +137,10 @@ body {
 #select_button {
     left: 30%;
 }
+
+</style>
+
+<td id="gameboy" class="panel in-view">
+    {{> gameboy/screen}}
+    {{> gameboy/buttons}}
+</td>

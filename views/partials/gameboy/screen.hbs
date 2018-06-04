@@ -1,3 +1,4 @@
+<div id="gameboy_screen">
 {{#if user}}
 
 <script>
@@ -9,9 +10,11 @@
         "Settings"
     ];
 
+    /*
     mainMenu.finalize.anySelection = function(selection) {
         alert("You chose to " + selection);
     };
+    */
     mainMenu.finalize[0] = function() {
         window.location.href = "/game";
     };
@@ -27,3 +30,4 @@
 </script>
 
 {{/if}}
+</div>

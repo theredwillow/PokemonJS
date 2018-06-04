@@ -1,22 +1,74 @@
 <html>
 <head>
     <title>PokemonJS</title>
-    <link rel="stylesheet" href="/styles/pokemonFont.css" type="text/css" charset="utf-8" />
-    <link rel="stylesheet" href="/styles/index.css" type="text/css" charset="utf-8" />
+    <link rel="stylesheet" href="/fonts/pokemon/pokemonFont.css" type="text/css" charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <script src="/scripts/menu.js"></script>
+    <script src="scripts/resizeHandler.js"></script>
+    <script src="scripts/swipe.js"></script>
+    <script>
+        var panels;
+        var panelIndex = 0;
+
+        var definePanelIndex = function() {
+            panels = document.getElementsByClassName("panel");
+
+            for (var p = 0; p < panels.length; p++) {
+                if ( panels[p].classList.contains("in-view") ) {
+                    panelIndex = p;
+                    break;
+                }
+            }
+        };
+        window.addEventListener("load", definePanelIndex);
+
+        var slideDivsRight = function() {
+            if ( !document.body.classList.contains("mobile") || panelIndex == 0 )
+                return;
+
+            panels[panelIndex--].classList.remove("in-view");
+            panels[panelIndex].classList.add("in-view");
+        };
+        document.addEventListener("swipeRight", slideDivsRight);
+
+        var slideDivsLeft = function() {
+            if ( !document.body.classList.contains("mobile") || panelIndex == ( panels.length - 1 ) )
+                return;
+
+            panels[panelIndex++].classList.remove("in-view");
+            panels[panelIndex].classList.add("in-view");
+        };
+        document.addEventListener("swipeLeft", slideDivsLeft);
+
+    </script>
+    <style>
+
+    .mobile .panel
+    {
+        width: 80%;
+        height: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .mobile .panel:not(.in-view)
+    {
+        display: none;
+    }
+
+    </style>
 </head>
 <body>
 
+<table>
+<tr>
 {{> login}}
 
-<div id="instructions">
-    Sign in to resume your game.<br/>
-    <br/>
-    Or...<br/>
-    Sign up to start your adventure!
-</div>
+{{> gameboy/device}}
 
-{{> gameboy}}
+{{> chatbox}}
+</tr>
+</table>
 
 </body>
 </html>

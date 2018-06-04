@@ -1,7 +1,25 @@
 var express = require('express');
 var router = express.Router();
 var mongo = require('mongodb').MongoClient;
+var io = require('socket.io').listen(4000);
 var verify = require('../middleware/verify');
+
+io.on('connection', function(socket) {  
+
+    //io.to(data.location).emit();
+
+    socket.on('userSignIn', function(data) {
+ 
+        console.log("user sign in", data);
+
+        // Add player to location
+        socket.join(data.location);
+        socket.broadcast.to(data.location).emit('userSignedIn', data.name);
+        socket.emit('signedIn');
+
+    });
+
+});
 
 var req, res, next;
 

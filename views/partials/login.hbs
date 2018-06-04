@@ -1,3 +1,25 @@
+<style>
+    #sign-in
+    {
+        background-color: lavender;
+        border-radius: 20px;
+        padding: 17px;
+    }
+
+    .desktop #sign-in
+    {
+        top: 12%;
+        left: 0%;
+        height: 34%;
+    }
+
+    #notification {
+        font-weight: bold;
+        color: red;
+        visibility: hidden;
+    }
+</style>
+
 {{#if user}}
 
 <script>
@@ -39,11 +61,13 @@
 
 </script>
 
-<div id="sign-in">
+<td id="sign-in" class="panel">
     Username: {{user}}<br/>
     <span id="notification">Log-out error</span><br/>
-    <button id="sign-out-button">Sign Out</button>
-</div>
+    <button id="sign-out-button">Sign Out</button><br/>
+    <br/>
+    Play offline / Play with friends / Play online
+</td>
 
 {{else}}
 
@@ -96,13 +120,13 @@
 
 </script>
 
-<div id="sign-in">
+<td id="sign-in" class="panel">
     Username:<br/>
     <input type="text" id="username"/><br/>
     Password:<br/>
     <input type="password" id="password"/><br/>
     <span id="notification">Log-in error</span><br/>
     <button>Register</button><button id="sign-in-button">Sign In</button>
-</div>
+</td>
 
 {{/if}}

@@ -1,2 +1,32 @@
-{{user}}<br/>
-{{town}}
+<html>
+<head>
+    <title>PokemonJS</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/map.css">
+</head>
+<body>
+
+    <img src="/images/loading.gif" id="loading">
+    {{user}}<br/>
+    {{town}}
+
+    <script>
+        (function(){
+            var socket = io.connect('http://127.0.0.1:4000');
+            if ( socket !== undefined ) {
+                var player = {
+                    name: "{{user}}",
+                    location: "{{town}}"
+                };
+                socket.emit("userSignIn", player);
+                {{> userSignedIn}}
+                {{> signedIn}}
+            }
+            else {
+                console.log("Database connection error");
+            }
+        })();
+    </script>
+
+</body>
+</html>
