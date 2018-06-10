@@ -1,0 +1,47 @@
+<style>
+
+    #user
+    {
+        background-color: lavender;
+        border-radius: 20px;
+    }
+
+    #user-log-in-area
+    {
+      margin: 17px;
+    }
+
+    #notification
+    {
+        font-weight: bold;
+        visibility: hidden;
+    }
+
+</style>
+
+<div id="user" class="panel in-view">
+
+    <div id="user-log-in-area">
+
+    </div>
+
+    <br/>
+    <div id="connectivity-option">
+
+        <label for="online-selection">Play online with everyone</label>
+        <input type="radio" name="connectivity" id="online-selection" checked>
+        <span class="connectivity-spacing"><br/></span>
+
+        <label for="limited-selection">Play online with only friends</label>
+        <input type="radio" name="connectivity" id="limited-selection">
+        <span class="connectivity-spacing"><br/></span>
+
+        <label for="offline-selection">Play offline by yourself</label>
+        <input type="radio" name="connectivity" id="offline-selection">
+        <span class="connectivity-spacing"><br/></span>
+
+        <div id="offline-slider" class="slider"></div>
+
+    </div>
+
+</div>

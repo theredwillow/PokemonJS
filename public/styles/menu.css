@@ -1,0 +1,12 @@
+.menu_option
+{
+    font-family: 'pokemon', Arial, sans-serif;
+    letter-spacing: 1px;
+    padding: 3px;
+}
+
+.selected
+{
+    border-width: 5px;
+    border-style: double;
+}

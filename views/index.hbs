@@ -1,74 +1,79 @@
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>PokemonJS</title>
-    <link rel="stylesheet" href="/fonts/pokemon/pokemonFont.css" type="text/css" charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <script src="/scripts/menu.js"></script>
-    <script src="scripts/resizeHandler.js"></script>
-    <script src="scripts/swipe.js"></script>
-    <script>
-        var panels;
-        var panelIndex = 0;
-
-        var definePanelIndex = function() {
-            panels = document.getElementsByClassName("panel");
-
-            for (var p = 0; p < panels.length; p++) {
-                if ( panels[p].classList.contains("in-view") ) {
-                    panelIndex = p;
-                    break;
-                }
-            }
-        };
-        window.addEventListener("load", definePanelIndex);
-
-        var slideDivsRight = function() {
-            if ( !document.body.classList.contains("mobile") || panelIndex == 0 )
-                return;
-
-            panels[panelIndex--].classList.remove("in-view");
-            panels[panelIndex].classList.add("in-view");
-        };
-        document.addEventListener("swipeRight", slideDivsRight);
-
-        var slideDivsLeft = function() {
-            if ( !document.body.classList.contains("mobile") || panelIndex == ( panels.length - 1 ) )
-                return;
-
-            panels[panelIndex++].classList.remove("in-view");
-            panels[panelIndex].classList.add("in-view");
-        };
-        document.addEventListener("swipeLeft", slideDivsLeft);
-
-    </script>
-    <style>
-
-    .mobile .panel
-    {
-        width: 80%;
-        height: 80%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .mobile .panel:not(.in-view)
-    {
-        display: none;
-    }
-
-    </style>
+  <title>PokemonJS</title>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="Description" content="Explore the world of Pokemon online with friends!">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="mobile-web-app-capable" content="yes">
+  {{> util/loader}}
 </head>
 <body>
 
-<table>
-<tr>
-{{> login}}
+{{> panels/1_user}}
 
-{{> gameboy/device}}
+{{> panels/2_gameboy}}
 
-{{> chatbox}}
-</tr>
-</table>
+{{> panels/3_chatbox}}
+
+<script>
+
+    window.socketFuncs = {};
+
+    Promise.all([
+        load.css('/styles/index.css'),
+        load.js('/javascripts/logInHandler.js'),
+        load.css('/styles/offlineSlider.css'),
+        load.js('/javascripts/offlineSlider.js'),
+        load.css('/styles/gameboy.css'),
+        load.img('/images/gameboy.webp', '#device'),
+        load.js('/javascripts/resizeHandler.js'),
+        load.js('/javascripts/swipe.js'),
+        load.js('/javascripts/panelChooser.js'),
+        load.js('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js'),
+        load.js('/javascripts/startGame.js'),
+        load.css('/fonts/pokemon/pokemonFont.css')
+    ]).then(function() {
+        console.log('Everything has loaded!');
+
+        {{> util/loadServiceWorker}}
+
+        (function(){
+            var socket = io.connect('http://127.0.0.1:4000');
+            if ( socket !== undefined ) {
+
+                drawLogIn();
+
+                window.credentials = {
+                    username : localStorage.getItem("username"),
+                    token : localStorage.getItem("token")
+                };
+
+                {{> socket/askToSignIn}}
+                {{> socket/askToSignOut}}
+
+                if ( window.credentials.username && window.credentials.token ) {
+                    {{> socket/askIfTokenWorks}}
+                }
+                else
+                    drawLogIn();
+                
+                socket.emit("aUserSignIn");
+
+                {{> socket/askToLoadGame}}
+
+                {{> socket/aUserSignedIn}}
+
+            }
+            else {
+                console.log("Database connection error");
+            }
+        })();
+    }).catch(function(errUrl) {
+        console.log('Oh no, epic failure!', errUrl);
+    });
+
+</script>
 
 </body>
 </html>

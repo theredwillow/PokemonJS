@@ -1,0 +1,60 @@
+<script>
+    var load = (function() {
+        // Function which returns a function: https://davidwalsh.name/javascript-functions
+        function _load(tag) {
+            return function(url, querySelector) {
+                // This promise will be used by Promise.all to determine success or failure
+                return new Promise(function(resolve, reject) {
+                    var element = document.createElement(tag);
+                    var parent = 'body';
+                    var attr = 'src';
+
+                    // Important success and error for the promise
+                    element.onload = function() { resolve(url); };
+                    element.onerror = function() { reject(url); };
+
+                    // Need to set different attributes depending on tag type
+                    console.log("Loading:", url, tag, querySelector);
+                    switch(tag) {
+                        case 'script':
+                            element.async = true;
+                            break;
+                        case 'link':
+                            element.type = 'text/css';
+                            element.rel = 'stylesheet';
+                            attr = 'href';
+                            parent = 'head';
+                    }
+
+                    if ( tag == 'img' && /\.webp$/.test(url) ) {
+                        var canLoadWebp = true;
+                        var elem = document.createElement('canvas');
+                        if (!!(elem.getContext && elem.getContext('2d'))) {
+                            // was able or not to get WebP representation
+                            canLoadWebp = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+                        }
+                        else {
+                            // very old browser like IE 8, canvas not supported
+                            canLoadWebp = false;
+                        }
+                        if (!canLoadWebp)
+                            url = url.replace(".webp", ".png");
+                    }
+
+                    // Inject into document to kick off loading
+                    element[attr] = (tag == 'manifest') ? "/manifest.json" : url;
+
+                    if (!querySelector)
+                        document[parent].appendChild(element);
+                    else
+                        document.querySelector(querySelector)[attr] = url;
+                });
+            };
+        }
+        return {
+            css: _load('link'),
+            js: _load('script'),
+            img: _load('img')
+        }
+    })();
+</script>

@@ -1,0 +1,30 @@
+
+// ASK
+window.socketFuncs.tryToSignIn = function() {
+    window.credentials.username = document.getElementById("username").value;
+    var cred = {
+        username: window.credentials.username,
+        password: document.getElementById("password").value
+    };
+    displayLoading("Trying to sign you in");
+    socket.emit("askToSignIn", cred);
+};
+
+// IF YES
+socket.on('yesToSignIn', function(result) {
+
+    localStorage.setItem("token", result.token);
+    localStorage.setItem("username", window.credentials.username);
+    window.credentials.token = result.token;
+
+    drawLogOut();
+
+});
+
+// IF NO
+socket.on('noToSignIn', function(result) {
+
+    window.credentials.username = null;
+    displayError(result);
+
+});

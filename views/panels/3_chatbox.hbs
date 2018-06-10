@@ -1,0 +1,51 @@
+<style>
+  .activity
+  {
+    border: 1px solid black;
+    margin: 2px;
+    padding: 3px;
+  }
+</style>
+
+<div id="chatbox" class="panel">
+  <div class="activity">User signed in!</div>
+  <div class="activity">User said "poop".</div>
+  <div class="activity">User entered Oak's Lab from Pallet Town.</div>
+</div>
+
+<script>
+  var chatbox = new function() {
+
+    var thisChatbox = this;
+
+    this.element = document.getElementById("chatbox");
+
+    this.addActivity = function(user, type, data) {
+      var div = document.createElement("div");
+      div.className = "activity";
+
+      if ( type == "said" ) {
+        div.className += " message";
+        var span = document.createElement("span");
+        span.innerHTML = user + ': "' + data + '"';
+        div.appendChild(span);
+        div.appendChild( document.createElement("br") );
+      }
+      else {
+        var i = document.createElement("i");
+        if ( type == "entered" || type == "left" ) {
+          var article = ( type == "entered" ) ? " from " : " to go to ";
+          i.innerHTML = user + " " + type + " {{town}}" + article + data + ".";
+        }
+        else {
+          i.innerHTML = user + " " + type + ".";
+        }
+        div.appendChild(i);
+      }
+
+      thisChatbox.element.appendChild(div);
+    };
+
+  };
+
+</script>

@@ -6,14 +6,9 @@ var logger = require('morgan');
 var hbs = require('hbs');
 var mongo = require('mongodb').MongoClient;
 var io = require('socket.io').listen(4000);
+var socketFunc = require('./socket_server.js');
 
 global.mongoURL = "mongodb://127.0.0.1";
-
-var indexRouter = require('./routes/index');
-var gameRouter = require('./routes/game');
-
-var login = require('./middleware/login');
-var logout = require('./middleware/logout');
 
 var app = express();
 
@@ -27,14 +22,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-hbs.registerPartials(__dirname + '/views/partials');
-hbs.registerPartials(__dirname + '/views/socket');
+io.on('connection', socketFunc);
 
-app.use('/', indexRouter);
-app.use('/game', gameRouter);
+hbs.registerPartials(__dirname + '/views');
 
-app.post('/login', login);
-app.post('/logout', logout);
+app.get('/', function(req, res) {
+  res.render('index');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

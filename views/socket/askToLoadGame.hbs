@@ -1,0 +1,17 @@
+
+// ASK
+window.socketFuncs.tryToLoadGame = function() {
+    socket.emit("askToLoadGame", window.credentials);
+};
+
+// IF YES
+socket.on('yesToLoadGame', function(result) {
+
+});
+
+// IF NO
+socket.on('noToLoadGame', function(result) {
+
+    alert("I'm very sorry, there was a problem loading your game!");
+
+});

@@ -1,0 +1,15 @@
+// ASK
+socket.emit("askIfTokenWorks", window.credentials);
+displayLoading("Checking if you're logged in already");
+
+// IF YES
+socket.on('yesToTokenWorks', drawLogOut);
+
+// IF NO
+socket.on('noToTokenWorks', function(result) {
+
+    window.credentials = { };
+    drawLogIn();
+    displayError(result);
+
+});

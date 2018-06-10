@@ -1,0 +1,22 @@
+.panel
+{
+    height: 92vh;
+    position: relative;
+}
+.desktop .panel
+{
+  float: left;
+  margin: 2px;
+  padding: 2px;
+  position: relative;
+}
+
+.mobile .panel
+{
+
+}
+
+.mobile .panel:not(.in-view)
+{
+    display: none;
+}

@@ -1,0 +1,17 @@
+
+// ASK
+window.socketFuncs.tryToSignOut = function() {
+    socket.emit("askToSignOut", window.credentials);
+    displayLoading("Trying to sign you out");
+};
+
+// IF YES
+socket.on('yesToSignOut', function(result) {
+    window.credentials = { };
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    drawLogIn();
+});
+
+// IF NO
+socket.on('noToSignOut', displayError);
