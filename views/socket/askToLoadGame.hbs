@@ -5,7 +5,22 @@ window.socketFuncs.tryToLoadGame = function() {
 };
 
 // IF YES
-socket.on('yesToLoadGame', function(result) {
+socket.on('yesToLoadGame', function(locationsOnMap) {
+    screen.innerHTML = "";
+    game.sprites = locationsOnMap;
+
+    console.log("locationsOnMap:", locationsOnMap);
+
+    for ( var l = 0; l < locationsOnMap.length; l++ ) {
+        locationsOnMap[l] = Location( locationsOnMap[l] );
+        locationsOnMap[l].draw();
+
+        var visitorsToLocation = locationsOnMap[l].visitors;
+        for ( var v = 0; v < visitorsToLocation.length; v++ ) {
+            visitorsToLocation[v] = Character( visitorsToLocation[v] );
+            visitorsToLocation[v].draw(locationsOnMap[l]);
+        }
+    }
 
 });
 

@@ -38,6 +38,7 @@
   max-height: 27%;
   background-color: black;
   border: 2px solid black;
+  overflow: hidden;
 }
 
 .round_button {

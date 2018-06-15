@@ -8,7 +8,12 @@ var startGame = function() {
         load.js('/javascripts/controls.js'),
         load.css('/fonts/pokemon/pokemonFont.css'),
         load.js('/javascripts/menu.js'),
-        load.css('/styles/menu.css')
+        load.css('/styles/menu.css'),
+        load.js('/javascripts/util.js'),
+        load.css('styles/map.css'),
+        load.js('/javascripts/handlecss.js'),
+        load.js('/javascripts/Location.js'),
+        load.js('/javascripts/Character.js')
     ]).then(function() {
 
         var mainMenu = new MenuDisplay();
