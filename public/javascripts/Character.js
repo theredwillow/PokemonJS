@@ -5,9 +5,16 @@ var Character = function(thisCharacter) {
 
 	thisCharacter.id = "male-trainer";
 
-	thisCharacter.imageSize = { width: 84, height: 97 };
-	thisCharacter.tileSize = { width: 28, height: 32 };
-	thisCharacter.imageDimensions = { x: 3, y: 3 };
+	thisCharacter.image = {
+		_id: "maleTrainer",
+		dimensions: {
+			width: 84,
+			height: 97,
+			tiles: { width: 28, height: 32 }
+			// tile dimensions: 3,3
+			// tileSize game: 16px
+		}
+	};
 
 	thisCharacter.tiles = {
 		north: {

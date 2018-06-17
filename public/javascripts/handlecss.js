@@ -3,17 +3,17 @@ var generateCSS = function(thisSprite) {
     var thisCSS = {};
 
     var resizeTiles = function() {
-        if ( thisSprite.tileSize.width != thisSprite.tileSize.height ) {
-            var ifWidthIsLonger = ( thisSprite.tileSize.width > thisSprite.tileSize.height );
-            var longerSide = ( ifWidthIsLonger ) ? thisSprite.tileSize.width : thisSprite.tileSize.height;
-            var shorterSide = ( ifWidthIsLonger ) ? thisSprite.tileSize.height : thisSprite.tileSize.width;
+        if ( thisSprite.image.dimensions.tiles.width != thisSprite.image.dimensions.tiles.height ) {
+            var ifWidthIsLonger = ( thisSprite.image.dimensions.tiles.width > thisSprite.image.dimensions.tiles.height );
+            var longerSide = ( ifWidthIsLonger ) ? thisSprite.image.dimensions.tiles.width : thisSprite.image.dimensions.tiles.height;
+            var shorterSide = ( ifWidthIsLonger ) ? thisSprite.image.dimensions.tiles.height : thisSprite.image.dimensions.tiles.width;
             var newShorterSide = ( game.css.tileSize / longerSide ) * shorterSide;
-            thisSprite.tileSize.width = (ifWidthIsLonger) ? game.css.tileSize : newShorterSide;
-            thisSprite.tileSize.height = (!ifWidthIsLonger) ? game.css.tileSize : newShorterSide;
+            thisSprite.image.dimensions.tiles.width = (ifWidthIsLonger) ? game.css.tileSize : newShorterSide;
+            thisSprite.image.dimensions.tiles.height = (!ifWidthIsLonger) ? game.css.tileSize : newShorterSide;
         }
         else {
-            thisSprite.tileSize.width = game.css.tileSize;
-            thisSprite.tileSize.height =  game.css.tileSize;
+            thisSprite.image.dimensions.tiles.width = game.css.tileSize;
+            thisSprite.image.dimensions.tiles.height =  game.css.tileSize;
         }
     };
  
@@ -28,8 +28,8 @@ var generateCSS = function(thisSprite) {
                 var thisTilesCoor = theseBackgrounds[ thisCSS.states[tileName]++ ];
                 thisCSS.animated.innerHTML += "." + thisSprite.id + "." + tileName;
                 thisCSS.animated.innerHTML += " { background-position: ";
-                thisCSS.animated.innerHTML += (thisTilesCoor.x * -1 * thisSprite.tileSize.width) + "px ";
-                thisCSS.animated.innerHTML += (thisTilesCoor.y * -1 * thisSprite.tileSize.height) + "px }\n";
+                thisCSS.animated.innerHTML += (thisTilesCoor.x * -1 * thisSprite.image.dimensions.tiles.width) + "px ";
+                thisCSS.animated.innerHTML += (thisTilesCoor.y * -1 * thisSprite.image.dimensions.tiles.height) + "px }\n";
                 if ( thisCSS.states[tileName] >= theseBackgrounds.length )
                     delete thisCSS.states[tileName];
             }
@@ -37,8 +37,8 @@ var generateCSS = function(thisSprite) {
                 var thisTilesCoor = theseBackgrounds[0];
                 thisCSS.static.innerHTML += "." + thisSprite.id + "." + tileName;
                 thisCSS.static.innerHTML += " { background-position: ";
-                thisCSS.static.innerHTML += (thisTilesCoor.x * -1 * thisSprite.tileSize.width) + "px ";
-                thisCSS.static.innerHTML += (thisTilesCoor.y * -1 * thisSprite.tileSize.height) + "px }\n";
+                thisCSS.static.innerHTML += (thisTilesCoor.x * -1 * thisSprite.image.dimensions.tiles.width) + "px ";
+                thisCSS.static.innerHTML += (thisTilesCoor.y * -1 * thisSprite.image.dimensions.tiles.height) + "px }\n";
             }
         };
 
@@ -68,7 +68,7 @@ var generateCSS = function(thisSprite) {
                 thisCSS.image.type = "text/css";
                 thisCSS.image.id = thisSprite.id + "-imageStyle";
                 thisCSS.image.innerHTML += "." + thisSprite.id;
-                thisCSS.image.innerHTML += " { background-image: url('images/locations/" + thisSprite.image + ".png') }";
+                thisCSS.image.innerHTML += " { background-image: url('images/locations/" + thisSprite.image._id + ".png') }";
                 document.head.appendChild(thisCSS.image);
             }
             else if ( !thisCSS.image ) {
@@ -105,8 +105,8 @@ var generateCSS = function(thisSprite) {
 
             thisCSS.static.innerHTML = "." + thisSprite.id;
             thisCSS.static.innerHTML += " { background-size: ";
-            thisCSS.static.innerHTML += ( thisSprite.imageDimensions.x * thisSprite.tileSize.width ) + "px ";
-            thisCSS.static.innerHTML += ( thisSprite.imageDimensions.y * thisSprite.tileSize.height ) + "px; }\n";
+            thisCSS.static.innerHTML += thisSprite.image.dimensions.width + "px ";
+            thisCSS.static.innerHTML += thisSprite.image.dimensions.height + "px; }\n";
 
             thisCSS.tileNames.forEach(thisCSS.generateRule);
         }
@@ -130,24 +130,24 @@ var generateCSS = function(thisSprite) {
                 thisCSS.image = imageStyle;
             }
 
-            debugger;
             thisCSS.image.innerHTML = "." + thisSprite.id + " {";
-            thisCSS.image.innerHTML += "\tbackground-image: url('images/sprites/" + thisSprite.image + ".png');\n";
+            thisCSS.image.innerHTML += "\tbackground-image: url('images/sprites/" + thisSprite.image._id + ".png');\n";
             thisCSS.image.innerHTML += "\tbackground-size: ";
-            thisCSS.image.innerHTML += ( thisSprite.tileSize.width * thisSprite.imageDimensions.x ) + "px ";
-            thisCSS.image.innerHTML += ( thisSprite.tileSize.height * thisSprite.imageDimensions.y ) + "px;\n";
-            thisCSS.image.innerHTML += "\twidth: " + thisSprite.tileSize.width + "px;\n";
-            thisCSS.image.innerHTML += "\theight: " + thisSprite.tileSize.height + "px;\n}\n";
+            // WHY DOES THE CHARACTER SPRITE REQUIRE THE DIVISION BY TWO?!
+            thisCSS.image.innerHTML += (thisSprite.image.dimensions.width/2) + "px ";
+            thisCSS.image.innerHTML += (thisSprite.image.dimensions.height/2) + "px;\n";
+            thisCSS.image.innerHTML += "\twidth: " + thisSprite.image.dimensions.tiles.width + "px;\n";
+            thisCSS.image.innerHTML += "\theight: " + thisSprite.image.dimensions.tiles.height + "px;\n}\n";
 
             for (var i = 0; i < 4; i++) {
                 var dir = directions[i];
                 for (var j = 0; j < 3; j++) {
                     var stride = strides[j];
-                    thisCSS.image.innerHTML += ".male-trainer." + dir + "." + stride;
+                    thisCSS.image.innerHTML += "." + thisSprite.id + "." + dir + "." + stride;
                     thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].flip ) ? "\n{\n\t" : " { ";
                     thisCSS.image.innerHTML += "background-position: ";
-                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].x * -1 * thisSprite.tileSize.width ) + "px ";
-                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].y * -1 * thisSprite.tileSize.height ) + "px;";
+                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].x * -1 * thisSprite.image.dimensions.tiles.width ) + "px ";
+                    thisCSS.image.innerHTML += ( thisSprite.tiles[dir][stride].y * -1 * thisSprite.image.dimensions.tiles.height ) + "px;";
                     if ( thisSprite.tiles[dir][stride].flip ) {
                         if ( dir == "east" || dir == "west" ) {
                             thisCSS.image.innerHTML += `

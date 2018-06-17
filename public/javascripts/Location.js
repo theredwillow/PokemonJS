@@ -1,7 +1,7 @@
 var Location = function(thisLocation) {
 
     thisLocation.type = "location";
-    thisLocation.id = thisLocation.name.replace(/[\s()\[\]]/g,"");
+    thisLocation.id = thisLocation._id.replace(/[\s()\[\]]/g,"");
 
     // Set the permanent defaults, clear it from template to save memory
     Object.defineProperty( thisLocation, "defaults", {
@@ -139,7 +139,7 @@ var Location = function(thisLocation) {
         thisLocation.height = (thisLocation.coordinates.length * game.css.tileSize) + "px";
         thisLocation.width = (thisLocation.coordinates[0].length * game.css.tileSize) + "px";
         loopThru(drawRow, drawCell);
-        thisLocation.backgrounds = thisLocation.backgrounds || thisLocation.defaults.backgrounds;
+        thisLocation.backgrounds = thisLocation.backgrounds || thisLocation.image.tiles;
         thisLocation.css = generateCSS(thisLocation);
     };
 

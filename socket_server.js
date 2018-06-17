@@ -3,11 +3,11 @@ var bcrypt = require('bcrypt');
 
 var resolveDemand = function(demand, resultData) {
     if (!resultData.error) {
-        console.log(demand, "was successful, sending this:", resultData);
+        console.log(demand, "was successful, sending this:", JSON.stringify(resultData));
         socket.emit('yesTo' + demand, resultData);
     }
     else {
-        console.log(demand, "was unsuccessful, sending this:", resultData);
+        console.log(demand, "was unsuccessful, sending this:", JSON.stringify(resultData));
         socket.emit('noTo' + demand, resultData);
     }
 };
@@ -134,6 +134,53 @@ var verify = function(data) {
     });
 };
 
+var getMap = function(data) {
+    mongo.connect(mongoURL, function(err, client) {
+        var db = client.db('database');
+        var userCollection = db.collection('users');
+        var locationsCollection = db.collection('locations');
+        var locationImagesCollection = db.collection('locationImages');
+
+        var getTownImage = function(townObj) {
+            console.log("getTownImage's townObj:", JSON.stringify(townObj));
+            locationImagesCollection.findOne({ _id : townObj.image }, function(err, imageObj) {
+                if (err)
+                    resolveDemand("LoadGame", { error: "Database connection error: " + err } );
+                else if (!townObj)
+                    resolveDemand("LoadGame", { error: "This location image doesn't seem to exist." });
+                else {
+                    townObj.image = imageObj;
+                    townsCollected.push(townObj);
+                    townsToCollect--;
+                    resolveDemand("LoadGame", townsCollected);
+                }
+            });
+        };
+
+        var getTown = function(townName) {
+            console.log("Get town:", townName);
+            locationsCollection.findOne({ _id : townName }, function(err, townObj) {
+                if (err)
+                    resolveDemand("LoadGame", { error: "Database connection error: " + err } );
+                else if (!townObj)
+                    resolveDemand("LoadGame", { error: "This location doesn't seem to exist." });
+                else
+                    getTownImage(townObj);
+            });
+        };
+        
+        var townsCollected = [];
+        var townsToCollect = 1;
+        // Figure out where player is
+        userCollection.findOne({ _id : data.username }, function(err, userObj) {
+            if (err)
+                resolveDemand("LoadGame", { error: "Database connection error, couldn't figure out where player was: " + err });
+            else
+                getTown(userObj.town);
+        });
+    });
+};
+
 module.exports = function(socket) {  
 
     global.socket = socket;
@@ -158,245 +205,6 @@ module.exports = function(socket) {
     
     });
 
-    socket.on('askToLoadGame', function(data) {
-  
-        console.log("someone's asking to load game", data);
-
-        var testSprite = {
-
-        };
-
-        var testLocation = {
-        
-            name : "Pallet Town (Test)",
-        
-            image : "palletTown",
-            imageDimensions : { x: 4, y: 11 },
-            imageSize : { width: 64, height: 176 },
-            tileSize : { width: 16, height: 16 },
-
-            visitors : [
-                {
-                    user: "theredwillow",
-                    image: "maleTrainer",
-                    location: { r: 4, c: 2 }
-                },
-                {
-                    user: "BobTest123",
-                    image: "maleTrainer",
-                    location: { r:1, c:6 }
-                }
-            ],
-
-            defaults : {
-        
-                backgrounds : {
-                    "a0": [
-                    { "x": 0, "y": 0 }
-                    ],
-                    "a1": [
-                    { "x": 1, "y": 0 }
-                    ],
-                    "a2": [
-                    { "x": 2, "y": 0 }
-                    ],
-                    "a3": [
-                    { "x": 3, "y": 0 }
-                    ],
-                    "b0": [
-                    { "x": 0, "y": 1 }
-                    ],
-                    "b1": [
-                    { "x": 1, "y": 1 }
-                    ],
-                    "b2": [
-                    { "x": 2, "y": 1 }
-                    ],
-                    "b3": [
-                    { "x": 3, "y": 1 }
-                    ],
-                    "c0": [
-                    { "x": 0, "y": 2 }
-                    ],
-                    "c1": [
-                    { "x": 1, "y": 2 }
-                    ],
-                    "c2": [
-                    { "x": 2, "y": 2 }
-                    ],
-                    "c3": [
-                    { "x": 3, "y": 2 }
-                    ],
-                    "d0": [
-                    { "x": 0, "y": 3 }
-                    ],
-                    "d1": [
-                    { "x": 1, "y": 3 }
-                    ],
-                    "d2": [
-                    { "x": 2, "y": 3 }
-                    ],
-                    "d3": [
-                    { "x": 3, "y": 3 }
-                    ],
-                    "e0": [
-                    { "x": 0, "y": 4 }
-                    ],
-                    "e1": [
-                    { "x": 1, "y": 4 }
-                    ],
-                    "e2": [
-                    { "x": 2, "y": 4 }
-                    ],
-                    "e3": [
-                    { "x": 3, "y": 4 }
-                    ],
-                    "f0": [
-                    { "x": 0, "y": 5 }
-                    ],
-                    "f1": [
-                    { "x": 1, "y": 5 }
-                    ],
-                    "f2": [
-                    { "x": 1, "y": 6 }
-                    ],
-                    "f3": [
-                    { "x": 2, "y": 6 }
-                    ],
-                    "g0": [
-                    { "x": 3, "y": 6 }
-                    ],
-                    "g1": [
-                    { "x": 0, "y": 7 }
-                    ],
-                    "g2": [
-                    { "x": 1, "y": 7 }
-                    ],
-                    "g3": [
-                    { "x": 2, "y": 7 }
-                    ],
-                    "h0": [
-                    { "x": 2, "y": 8 }
-                    ],
-                    "h1": [
-                    { "x": 3, "y": 8 }
-                    ],
-                    "h2": [
-                    { "x": 0, "y": 9 }
-                    ],
-                    "h3": [
-                    { "x": 1, "y": 9 }
-                    ],
-                    "i0": [
-                    { "x": 2, "y": 9 }
-                    ],
-                    "i1": [
-                    { "x": 3, "y": 9 }
-                    ],
-                    "i2": [
-                    { "x": 0, "y": 10 }
-                    ],
-                    "i3": [
-                    { "x": 1, "y": 10 }
-                    ],
-                    "j0": [
-                    { "x": 2, "y": 10 }
-                    ],
-                    "j1": [
-                    { "x": 3, "y": 10 }
-                    ],
-                    "j2": [
-                    { "x": 2, "y": 5 },
-                    { "x": 3, "y": 5 },
-                    { "x": 0, "y": 6 }
-                    ],
-                    "j3": [
-                    { "x": 3, "y": 7 },
-                    { "x": 0, "y": 8 },
-                    { "x": 1, "y": 8 }
-                    ]
-                },
-            
-                walk : [ "a0", "a2", "a3", "b0", "b1", "j2", "j3" ],
-            
-                surf : [ ],
-            
-                coordinates : [
-                    [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1" ],
-                    [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "b0", "a1" ],
-                    [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a3", "a3", "a3", "a1" ],
-                    [ "a1", "b1", "b1", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "b1", "b1", "a1", "a1", "a1", "a3", "a3", "b0", "a1" ],
-                    [ "a1", "b1", "b1", "e2", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "e2", "b1", "b1", "a1", "a1", "a1", "b1", "b1", "b1", "a1" ],
-                    [ "a1", "b1", "b1", "e2", "b1", "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "e2", "b1", "b1", "a1", "a1", "a1", "b1", "b1", "b0", "a1" ],
-                    [ "a1", "b1", "b1", "e2", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "e2", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b0", "a1" ],
-                    [ "a1", "b1", "b1", "e2", "b1", "b1", "b1", "b1", "a1", "b1", "b1", "b1", "b1", "b1", "b1", "e2", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "j2", "a1" ],
-                    [ "a1", "b1", "b1", "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "e2", "b1", "b1", "b2", "b3", "b3", "b3", "c0", "j2", "a1" ],
-                    [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a1", "b1", "b1", "e2", "b1", "b1", "c1", "d3", "h1", "c2", "d0", "j2", "a1" ],
-                    [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "e2", "b1", "b1", "j3", "a0", "j3", "j3", "j3", "j2", "a1" ],
-                    [ "a1", "b1", "b1", "d1", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "e2", "b1", "b1", "d1", "a0", "a0", "a0", "a0", "j2", "a1" ],
-                    [ "a1", "b1", "b1", "a0", "j2", "a0", "a0", "j2", "a0", "a0", "j2", "a0", "j2", "j2", "a0", "a0", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a0", "a1" ],
-                    [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a0", "a1" ],
-                    [ "a1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "b1", "a0", "a1" ],
-                    [ "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a1", "a0", "a1" ],
-                    [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "b1", "b1", "b1" ]
-                ],
-                
-                // Dev Idea: Load world by stringing together destinationLegends
-                // Dev Idea: Throw error for one way portals
-            
-                /*
-                    --- Portal Directions ---
-                -Inbound directions are listed in this order: "west", "north", "south", "east"
-                -Outbound directions are declared by the initial letter of the directional word
-            
-                Example
-                -A common command is "--n-"
-                    This means when you enter facing south (the third spot),
-                    you will come out facing north (the letter n)
-                */
-                
-                portals : {
-                    legend : {
-                        "l0" : {
-                        destination: { location: "Pallet Town Lab (Test)", r: 4, c: 2 },
-                        directions: "-n--"
-                        },
-                        "r0" : {
-                        destination: { location: "Route One (Test)", r: 0, c: 0 },
-                        directions: "--s-"
-                        }
-                    },
-                    coordinates : [
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "l0", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--" ],
-                        [ "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "--", "r0", "r0", "r0" ]
-                    ]
-                }
-
-            }
-        };
-
-        var stateOfGame = [
-            testLocation
-        ];
-
-        resolveDemand("LoadGame", stateOfGame);
-
-    });
+    socket.on('askToLoadGame', getMap);
   
 };
