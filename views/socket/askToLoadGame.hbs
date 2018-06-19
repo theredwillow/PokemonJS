@@ -9,9 +9,11 @@ socket.on('yesToLoadGame', function(locationsOnMap) {
     screen.innerHTML = "";
     game.sprites = locationsOnMap;
 
-    console.log("locationsOnMap:", locationsOnMap);
-
     for ( var l = 0; l < locationsOnMap.length; l++ ) {
+        if (locationsOnMap[l].error) {
+            console.log(locationsOnMap[l]._id, "didn't load:", locationsOnMap[l].error);
+            continue;
+        }
         locationsOnMap[l] = Location( locationsOnMap[l] );
         locationsOnMap[l].draw();
 

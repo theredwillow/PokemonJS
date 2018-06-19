@@ -10,6 +10,10 @@ var resolveDemand = function(demand, resultData) {
         console.log(demand, "was unsuccessful, sending this:", JSON.stringify(resultData));
         socket.emit('noTo' + demand, resultData);
     }
+    /* Eventually I'll have to figure out how to close databases properly
+    if ( resultData.final !== false )
+        db.close();
+    */
 };
 
 var maxAttempts = 5;
@@ -139,44 +143,74 @@ var getMap = function(data) {
         var db = client.db('database');
         var userCollection = db.collection('users');
         var locationsCollection = db.collection('locations');
-        var locationImagesCollection = db.collection('locationImages');
+        var spritesCollection = db.collection('sprites');
 
-        var getTownImage = function(townObj) {
-            console.log("getTownImage's townObj:", JSON.stringify(townObj));
-            locationImagesCollection.findOne({ _id : townObj.image }, function(err, imageObj) {
+        var getTownImages = function() {
+            spritesCollection.find( { $and: [ { _id : { $in: imagesToCollect } }, { type: "location" } ] } ).toArray(function(err,imageObjs) {
                 if (err)
-                    resolveDemand("LoadGame", { error: "Database connection error: " + err } );
-                else if (!townObj)
-                    resolveDemand("LoadGame", { error: "This location image doesn't seem to exist." });
+                    resolveDemand("LoadGame", {error: "Database connection error while getting town images."});
                 else {
-                    townObj.image = imageObj;
-                    townsCollected.push(townObj);
-                    townsToCollect--;
+                    townsCollected = Object.keys(townsCollected).map(function(t) {
+                        if (!townsCollected[t].error)
+                            townsCollected[t].image = imageObjs.find( function(i){ return i._id == townsCollected[t].image; } );
+                        return townsCollected[t];
+                    });
                     resolveDemand("LoadGame", townsCollected);
                 }
             });
         };
 
-        var getTown = function(townName) {
-            console.log("Get town:", townName);
-            locationsCollection.findOne({ _id : townName }, function(err, townObj) {
+        var getTowns = function() {
+            locationsCollection.find( { _id : { $in: townsToCollect } } ).toArray(function(err,townObjs) {
                 if (err)
-                    resolveDemand("LoadGame", { error: "Database connection error: " + err } );
-                else if (!townObj)
-                    resolveDemand("LoadGame", { error: "This location doesn't seem to exist." });
-                else
-                    getTownImage(townObj);
+                    resolveDemand("LoadGame", {error: "Database connection error while getting towns."});
+                else {
+                    var townsToCollectNext = [];
+                    for (var to = 0; to < townObjs.length; to++) {
+                        var townObj = townObjs[to];
+                        townsCollected[townObj._id] = townObj;
+                        townsToCollect.splice( townsToCollect.indexOf(townObj._id), 1 );
+
+                        if ( !townObj.error && !imagesToCollect.includes(townObj.image) )
+                            imagesToCollect.push(townObj.image);
+
+                        var thesePortals = Object.keys(townObj.defaults.portals.legend).map(function(key) { return townObj.defaults.portals.legend[key]; });
+                        for (var tp = 0; tp < thesePortals.length; tp++) {
+                            var thisPortal = thesePortals[tp].destination.location;
+                            if ( townsToCollect.indexOf(thisPortal) < 0
+                             && !townsCollected[thisPortal] )
+                                townsToCollectNext.push(thisPortal);
+                        }
+                    }
+
+                    for ( var tn = 0; tn < townsToCollect.length; tn++ ) {
+                        townsCollected[ townsToCollect[tn] ] = {
+                            _id: townsToCollect[tn],
+                            error: "This town wasn't found."
+                        };
+                    }
+
+                    townsToCollect = townsToCollectNext;
+
+                    if ( townsToCollect.length )
+                        getTowns();
+                    else
+                        getTownImages();
+                }
             });
         };
         
-        var townsCollected = [];
-        var townsToCollect = 1;
+        var townsCollected = {};
+        var townsToCollect = [];
+        var imagesToCollect = [];
         // Figure out where player is
         userCollection.findOne({ _id : data.username }, function(err, userObj) {
             if (err)
                 resolveDemand("LoadGame", { error: "Database connection error, couldn't figure out where player was: " + err });
-            else
-                getTown(userObj.town);
+            else {
+                townsToCollect.push(userObj.town);
+                getTowns();
+            }
         });
     });
 };
